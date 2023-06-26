@@ -1,0 +1,35 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{hyperref}
+\usepackage{etoc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+
+% cSpell:words Filesharing techstack
+
+\begin{document}
+
+  \setcounter{tocdepth}{1}
+  \tableofcontents
+  \newpage
+
+  \section{Einleitung}
+  Unser Projekt ist eine Filesharing App (Webseite), mit der Dateien Peer-to-Peer, also von Nutzer zu Nutzer, ohne zwischengeschalteten Server*, übertragen werden können. Die App basiert auf modernen Web-Technologien, wie z.B. Web Push, Service Workers und Progressive Web Apps. Durch die Design-Philosophie des Progressive Enhancement werden aber auch ältere Browser unterstützt. Eine Besonderheit der App ist es, dass sie dauerhafte Verbindungen durch Kontakte möglich macht. Kontakte können zwischen mehreren Nutzern geknüpft werden, wobei jeder Nutzer mehrere Geräte haben kann. Zum Schutz der Privatsphäre und Benutzersicherheit werden keine identifizierbaren Informationen auf dem Server (in der Datenbank) gespeichert und die Dateien im Transit Ende-zu-Ende verschlüsselt.
+  Die Motivation für dieses Projekt war das Problem, dass es keine einfache Möglichkeit gibt, zwischen iOS / Android / Windows / Linux Geräten Dateien zu teilen. Bestehende Webseiten nutzen hierfür einen Link, den der Empfänger öffnen muss, um die Datei zu empfangen. Hierbei stellt sich dann wieder die Frage, wie man diesen Link teilt. Um dieses Problem zu behandeln, implementiert die App ein Kontakt-System, in dem sich Nutzer einmalig über einen 6-stelligen Code verbinden und von nun an einfach miteinander Dateien teilen können. Dieses System ist vor allem in einer Umgebung nützlich, in der man oft Dokumente mit denselben Personen teilt, wie es z.B. in der Schule der Fall ist.
+
+  \section{Aufgabenteilung}
+
+  \subsection*{Mitglieder}
+  Dezhong Zhuang, Quentin Frey, Leonhard Masche
+
+  \section{To-Do}
+  mirror to readme\\
+  Anleitung\\
+  techstack\\
+  Webtechnologien und Fallbacks (version graphics)\\
+  mvc muster\\
+  anschaulich! (Grafiken, Diagramme, ...)
+
+
+\end{document}
