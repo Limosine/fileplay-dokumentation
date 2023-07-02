@@ -6,7 +6,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
 
-% cSpell:words Filesharing techstack Dezhong Zhuang
+% cSpell:words Filesharing techstack Dezhong Zhuang Svelte SMUI Benachrichtigungsdrawer Kontaktdrawer peerjs Fileplay
 
 \begin{document}
 
@@ -259,7 +259,57 @@ Dezhong Zhuang, Quentin Frey, Leonhard Masche
         relevante Datei ist '/src/lib/dialogs/SetupDialog.svelte'.
 \end{itemize}
 
-
+\subsubsection{Quentin Frey (\href{https://github.com/limosine}{@limosine})}
+\begin{itemize}
+  \item UI (Material Design):\\
+        Viele Webseiten, Progressive Web Apps oder auch native Apps verwenden Material Design.
+        Um die Eingewöhnung so einfach wie möglich zu machen, hielt ich mich streng an
+        die Material Design Guidelines. Daher verwendete ich ausschließlich Komponenten aus
+        SMUI (SvelteMaterialUI), zudem blieb der Code dadurch übersichtlich. Die UI der App
+        besteht aus der Startseite, dem Benachrichtigungsdrawer, dem Kontaktdrawer und einer
+        Leiste, welche sich am oberen Fensterrand befindet. Außerdem können einige Dialoge,
+        wie der Einstellungsdialog, der Dialog für das Senden von Dateien oder der Dialog,
+        welcher es ermöglicht die Eigenschaften von Geräten zu verändern, geöffnet werden.
+        In der oberen App-Leiste befinden sich Knöpfe, mit welchen die Drawer geöffnet werden
+        können, der aktuelle Status angezeigt wird und der Einstellungsdialog geöffnet werden kann.
+  \item State Management:\\
+        Da die angezeigten Daten immer auf dem aktuellsten Stand sein müssen, wurde
+        ein zentraler Timer implementiert, welcher die Daten in einem bestimmten Intervall
+        abruft, wenn diese benötigt werden. Damit die Daten nicht verloren gehen und die
+        Seite dynamisch erneuert wird, werden Svelte Stores verwendet, in denen die oben
+        genannten Daten gespeichert werden.
+  \item Senden \& Aufteilen von Dateien (PeerJS):\\
+        Die Dateien werden in 1 Megabyte große Stücke
+        (Chunks) aufgeteilt und mithilfe von PeerJS, welches die Nutzung von WebRTC-Protokollen
+        vereinfacht, versendet. Dies ist im Ordner \textit{src/lib/peerjs} zu finden.
+  \item Verschlüsselung \& Entschlüsselung von Dateien (OpenPGP):\\
+        Da die OpenPGP-Verschlüsselung schon im Alltag verwendet wird, ist diese
+        vielfach überprüft worden und daher sehr sicher. Beispielsweise beim Versenden von E-Mails
+        wird oftmals die Verschlüsselung durch GPG / OpenPGP durchgeführt. Bei diesem Verfahren
+        wird ein öffentlicher und ein privater Schlüssel erstellt. Um eine Nachricht zu
+        verschlüsseln, wird der öffentliche Schüssel des Empfängers benötigt, sodass der
+        Empfänger die Datei mit seinem persönlichen privaten Schlüssel entschlüsseln kann.
+        Diese Nachrichten werden durch eine Armor verstärkt, indem diese ins ASCII-Encoding
+        konvertiert werden, anschließend werden diese an den Empfänger gesendet, welcher
+        die Stücke dann wieder zusammensetzt und entschlüsselt.
+  \item WebSockets (ohne Durable Objects):\\
+        Durable Objects sind Objekte,
+        welche im Cloudflare-Netzwerk in jedem Rechenzentrum existieren und gegenseitig miteinander
+        vernetzt sind. Durch diese Objekte ist es möglich, mehrere WebSocket-Verbindungen zu koppeln,
+        sodass Daten ohne Verzögerung übertragen werden können. Da Durable Objects Premium-Funktionen
+        von Cloudflare sind, implementierte ich eine WebSocket-Verbindung, welche nicht auf Durable Objects
+        oder ähnliches angewiesen ist. Diese wurde aber von dem Fileplay-Worker ersetzt, sodass
+        die Webseite, nachdem das Abonnement gekündigt wurde, nicht mehr funktioniert und
+        voraussichtlich durch die ältere Methode ersetzt werden muss. Diese ältere Methode verwendete
+        Einträge in der Datenbank, um die PeerJS-ID sowie den öffentlichen Schlüssel zu übertragen und funktioniert
+        daher auch, wenn die WebSockets keine gegenseitige Kenntnis voneinander haben.
+  \item Gast-Modus (ohne Erstellung eines Accounts):
+        Da viele Personen lediglich ein einziges Mal eine Datei empfangen möchten, ist es für diese umständlich
+        einen Account erstellen zu müssen. Daher fügte ich den Gast-Modus hinzu, welcher es ermöglicht
+        einen Link zu generieren, welchen jeder aufrufen kann, ohne einen Account zu erstellen. Auch bei diesem
+        Modus wird die Datei verschlüsselt, statt einem PublicKey wird hier jedoch einen Zeichenfolge verwendet, welche
+        im Link enthalten ist.
+\end{itemize}
 
 \section{To-Do}
 mirror to readme\\
