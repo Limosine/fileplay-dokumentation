@@ -51,18 +51,24 @@ Framework \href{https://kit.svelte.dev/}{SvelteKit} im NodeJS Ökosystem
 entschieden. Dadurch muss die App nicht manuell in den Browser-kompatiblen
 Sprachen geschrieben werden, sondern kann in einer modernen Sprache (Svelte in
 Verbindung mit Typescript) geschrieben werden, wodurch die Entwicklung durch
-vorgefertigte Implementierungsmuster und Tools stark vereinfacht wird. Die
-Entwicklung der App findet in einem öffentlichen GitHub Repository statt. Dieses
-Repository ist unter \url{https://github.com/leonhma/fileplay} zu finden, und
-wird automatisch durch Integration mit Cloudflare auf den Adressen
+vorgefertigte Implementierungsmuster und Tools stark vereinfacht wird. Die App
+ist nach dem Muster einer Single-Page-Application aufgebaut, d.h. die Seite wird
+nur einmal geladen, und alle weiteren Interaktionen finden über JavaScript
+statt. Dadurch wird die App sehr schnell, da nur die Daten, die benötigt werden,
+vom Server geladen werden müssen. Zusätzlich wird die App dadurch sehr
+benutzerfreundlich, da der Nutzer nicht durch das Laden von verschiedenen Seiten
+unterbrochen wird. Durch die optionale Installation als Progressive Web App
+(PWA) kann die App auch auf dem Homescreen installiert werden, und verhält sich
+dann wie eine native App.\\
+Die Entwicklung der App findet in einem öffentlichen GitHub Repository statt.
+Dieses Repository ist unter \url{https://github.com/leonhma/fileplay} zu finden,
+und wird automatisch durch Integration mit Cloudflare auf den Adressen
 \url{https://app.fileplay.me} (für den {main}-branch) und
 \url{https://dev.fileplay.pages.dev} (für den {dev}-branch) verfügbar gemacht.\\
-Der Programmcode für einen Microservice ist unter
-\\\url{https://github.com/leonhma/fileplay-worker} zu finden.
-
-\subsection{Infrastruktur}
-
-Das Cloud-Hosting wird von Cloudflare betrieben. Cloudflare 
+Der Programmcode für einen Microservice der die Kommunikation von Server zu
+Client verwaltet ist unter \\\url{https://github.com/leonhma/fileplay-worker} zu
+finden. Dieser Mikroservice nutzt APIs die nicht in SvelteKit verfügbar sind,
+und wird deshalb separat gehosted.
 
 \subsection{Architektur}
 Die App ist nach dem MVC-Modell in drei Teile aufgeteilt: Frontend, Backend und
@@ -76,10 +82,46 @@ Entwickler-freundlich in Komponenten zu zerteilen. Zusätzlich bietet es eine
 einfache Möglichkeit, Backend und Frontend Seite an Seite zu entwickeln.
 Zusätzlich zu dem Backend-Code der in SvelteKit geschrieben ist, gibt es noch
 einen Microservice, der als \href{https://workers.cloudflare.com/}{Cloudflare
-  Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für die Kommunikation
-von Server zu Client verwendet werden. Die Datenbank ist eine SQLite Datenbank,
-die mit dem Backend verbunden ist und Daten wie Geräte, Nutzer und Kontakte speichert.\\
-todo Kommunikation der teile der app
+  Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
+die Kommunikation von Server zu Client verwendet werden. Die Datenbank ist eine
+SQLite Datenbank, die mit dem Backend verbunden ist und Daten wie Geräte, Nutzer
+und Kontakte speichert.\\
+Die einzelnen Teile der App (Backend, Datenbank und Microservice) werden alle
+auf Cloudflare gehosted. Cloudflare bietet verschieden Web-Hosting services an,
+darunter auch Pages, welches über eine GitHub Integration einfach mit dem
+Build-output von SvelteKit verbunden werden kann. Zusätzlich wird eine SQLite
+Datenbank namens D1 benutzt, welche im Backend einfach durch Umgebungsvariablen
+eingebunden werden kann. Der Microservice ist ein Cloudflare Worker, welcher
+mithilfe der neuen WebSocket Hibernation API ressourcenschonend die Verbindungen
+von Server zu Client verwaltet.\\
+Die nutzerseitige Logik der App findet vor allem in form von JavaScript
+clientseitig statt. Wenn Daten vom Server abgefragt werden müssen (so zum
+beispiel die liste der Kontakte), wird dies über eine REST API gemacht. Die
+Kommunikation von Server zu Client findet über WebSockets statt. Alternativ wird
+hier auch eine Implementation über Web Push verwendet, jedoch wurde diese
+aufgrund von Kompatibilitätsproblemen mit Edge und Firefox kurzfristig
+deaktiviert.
+
+\subsection{Geräte, Nutzer, Kontakte}
+
+Um eine einfache Organisation und Nutzung der App zu ermöglichen, werden
+Geräte, Nutzer und Kontakte unterschieden. Ein Gerät ist ein Gerät, auf dem die
+App installiert ist. Ein Nutzer ist eine Person, die die App nutzt. Ein Nutzer
+kann mehrere Geräte haben, und ein Gerät kann nur einen. Ein Kontakt
+repräsentiert eine Verbindung zwischen zwei Nutzern. Ein Nutzer kann mehrere
+Kontakte haben.
+
+
+\subsection{Filesharing}
+Wenn ein Nutzer eine Datei teilen möchte, wählt er einen verfügbaren Kontakt
+aus, dessen ID dann in einer Anfrage an den Server gesendet wird. Dieser schickt dann die Anfrage
+per WebSocket (oder Web Push) an die einzelnen Geräte des Kontakts. Wenn ein Gerät die Anfrage
+akzeptiert, schickt dieses Gerät eine Antwort an den Server, mit der PeerJs Adresse, an die die Datei übertragen
+werden soll. Diese Antwort enthält auch den Public Key des Geräts, der für die
+Verschlüsselung der Datei verwendet wird. Der Server leitet diese Antwort dann
+an den ursprünglichen Nutzer weiter, der dann die Datei an die PeerJs Adresse
+senden kann.
+
 
 
 \subsection{User-Story}
