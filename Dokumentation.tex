@@ -191,10 +191,12 @@ alles vcs, automatisiertes deployment, service worker update notification
 
 \section{Aufteilung der Aufgaben}
 
-\subsection{Mitglieder}
-Dezhong Zhuang, Quentin Frey, Leonhard Masche
+\addto{\captionsngerman}{\renewcommand*{\contentsname}{Mitglieder}}
+\setcounter{tocdepth}{2}
+\localtableofcontents
+\addto{\captionsngerman}{\renewcommand*{\contentsname}{Inhaltsverzeichnis}}
 
-\subsubsection{Leonhard Masche (\href{https://github.com/leonhma}{@leonhma})}
+\subsection{Leonhard Masche (\href{https://github.com/leonhma}{@leonhma})}
 \begin{itemize}
   \item Infrastruktur und DevOps: Ich habe die Struktur des Projektes
         eingerichtet, und die Infrastruktur auf Cloudflare konfiguriert. Dazu
@@ -259,7 +261,7 @@ Dezhong Zhuang, Quentin Frey, Leonhard Masche
         relevante Datei ist '/src/lib/dialogs/SetupDialog.svelte'.
 \end{itemize}
 
-\subsubsection{Quentin Frey (\href{https://github.com/limosine}{@limosine})}
+\subsection{Quentin Frey (\href{https://github.com/limosine}{@limosine})}
 \begin{itemize}
   \item UI (Material Design):\\
         Viele Webseiten, Progressive Web Apps oder auch native Apps verwenden Material Design.
@@ -303,7 +305,7 @@ Dezhong Zhuang, Quentin Frey, Leonhard Masche
         voraussichtlich durch die ältere Methode ersetzt werden muss. Diese ältere Methode verwendete
         Einträge in der Datenbank, um die PeerJS-ID sowie den öffentlichen Schlüssel zu übertragen und funktioniert
         daher auch, wenn die WebSockets keine gegenseitige Kenntnis voneinander haben.
-  \item Gast-Modus (ohne Erstellung eines Accounts):
+  \item Gast-Modus (ohne Erstellung eines Accounts):\\
         Da viele Personen lediglich ein einziges Mal eine Datei empfangen möchten, ist es für diese umständlich
         einen Account erstellen zu müssen. Daher fügte ich den Gast-Modus hinzu, welcher es ermöglicht
         einen Link zu generieren, welchen jeder aufrufen kann, ohne einen Account zu erstellen. Auch bei diesem
