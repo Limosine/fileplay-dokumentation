@@ -164,7 +164,25 @@ eine Datei geteilt wird. Dementsprechend wird der Name mithilfe der kostenlosen 
   https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
 Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier ungewollte
 Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der dann durch die \href{
-https://www.dicebear.com/}{Dicebear} API in einen Avatar umgewandelt wird.
+  https://www.dicebear.com/}{Dicebear} API in einen Avatar umgewandelt wird.
+Wenn der Nutzer das Gerät zu einem bereits existierenden Nutzer hinzufügt, muss er den
+Verbindungscode des Nutzers eingeben. Dieser Code wird dann an den Server gesendet, der
+dann überprüft, ob der Code existiert. Wenn der Code existiert, wird das Gerät dem Nutzer
+hinzugefügt, und der Code wird aus der Datenbank gelöscht. Wenn der Code nicht existiert,
+wird eine Fehlermeldung angezeigt.\\
+Nach der erfolgreichen Einrichtung wird sich die Statusanzeige (in der oberen rechten Ecke) schnell auf grün ändern.
+Das bedeutet, dass das Gerät mit dem Server verbunden ist, und die App vollständig einsatzbereit ist.
+
+\subsubsection{Kontakte verwalten}
+
+hinzufügen und entfernen von Kontakten
+
+\subsubsection{Dateien teilen}
+
+\subsubsection{Einstellungen}
+
+\subsubsection{App-Updates}
+alles vcs, automatisiertes deployment, service worker update notification
 
 
 
