@@ -205,7 +205,7 @@ Dezhong Zhuang, Quentin Frey, Leonhard Masche
   \item API: Ich habe die REST API entwickelt, die z.B. das Auflisten von
         Kontakten und Geräten, Anfragen von Datei-Sharing und das Verbinden von
         Nutzern untereinander und mit Geräten ermöglicht. Im Projekt sind all
-        diese Dateien unter '/src/routes/api' zu finden.
+        diese Dateien unter '/src/routes/api/**' zu finden.
   \item Authentifizierung: Ich habe die Authentifizierung implementiert, die
         dafür sorgt, dass nur authentifizierte Geräte mit dem Server
         kommunizieren können. Dazu gehört die Generierung von Tokens und
@@ -221,25 +221,25 @@ Dezhong Zhuang, Quentin Frey, Leonhard Masche
         '/src/lib/server/notifications.ts'.
   \item Web Push: Als einer der beiden Kanäle für die Benachrichtigungen habe
         ich Web Push implementiert. Dazu gehört auch die Authentifizierung mit
-        dem VAPID-Keypair des Servers. (siehe '/scripts/genenrate-keys.js').
+        dem VAPID-Keypair des Servers. (siehe '/scripts/generate-keys.js').
         Dieser Kanal ist vor allem für die Benachrichtigungen auf mobilen
         Geräten interessant, da er stromsparend Benachrichtigungen liefert, auch
         wenn das Gerät sich nicht auf der Webseite befindet. Die Implementation
         findet sich zum Teil in '/src/lib/server/notifications.ts' und zum Teil
-        im Service Worker. Aufgrund von unergründbaren Problemen bei der
+        im Service Worker ('/src/sw.ts'). Aufgrund von unergründbaren Problemen bei der
         Kompatibilität mit anderen Browsern (nicht Google Chrome), musste dieses
         Feature (zumindest für die Vorführung) aber deaktiviert werden.
   \item Service Worker: Zwischen Client und Server habe ich auch den Service
         Worker geschrieben, der das Caching der Webseite für eine schnellere
         Ladezeit mithilfe WorkBox verwaltet, und eine wichtige Rolle bei den
-        Push Notifications spielt geschrieben. Der Service Worker befindet sich
+        Push Notifications spielt, geschrieben. Der Service Worker befindet sich
         unter '/src/sw.ts'.
   \item WebSockets: Als zweiter Kanal für die Benachrichtigungen habe ich die
         finale Version der WebSockets implementiert. Zu dieser
         Benachrichtigungsmethode gehört auch der in 'leonhma/fileplay-worker'
         aufzufindende Cloudflare Worker, der ein Durable Object verwaltet,
         welches die WebSocket Verbindung dem Server gegenüber zugänglich macht.
-  \item Als ein weiterer Teil den Notifications, habe ich mich mit der
+  \item Als ein weiterer Teil der Notifications, habe ich mich mit der
         Übertragung von Nachrichten zwischen Service Worker und Client
         auseinandergesetzt. Dazu gehört auch, die per Web Push empfangenen
         Nachrichten an den Client (die Webseite) weiterzuleiten, um auf sie
@@ -252,8 +252,8 @@ Dezhong Zhuang, Quentin Frey, Leonhard Masche
         Notification Drawer sichtbar sind. Bei den In-App Benachrichtigungen
         habe ich mich um die klickbaren Aktionen und deren Ausführung bemüht,
         welche stark die Notification API im Service Worker nachahmen. Die
-        relevanten Dateien sind '/src/lib/stores/Dialog.ts' und
-        '/src/lib/components/NotificationsDrawer.svelte'.
+        relevanten Dateien sind '/src/sw.ts', '/src/lib/stores/Dialog.ts' und
+        '/src/lib/components/NotificationDrawer.svelte'.
   \item Ein Teil des UIs den Ich gestaltet habe, ist der Einrichtungs-Dialog.
         Dieser ist eng Verbunden mit der Authentifizierung und Der REST API. Die
         relevante Datei ist '/src/lib/dialogs/SetupDialog.svelte'.
