@@ -92,31 +92,58 @@ darunter auch Pages, welches über eine GitHub Integration einfach mit dem
 Build-output von SvelteKit verbunden werden kann. Zusätzlich wird eine SQLite
 Datenbank namens D1 benutzt, welche im Backend einfach durch Umgebungsvariablen
 eingebunden werden kann. Der Microservice ist ein Cloudflare Worker, welcher
-mithilfe der neuen WebSocket Hibernation API ressourcenschonend die Verbindungen
-von Server zu Client verwaltet.\\
-Die nutzerseitige Logik der App findet vor allem in form von JavaScript
+mithilfe der neuen WebSocket Hibernation API ressourcenschonend die WebSocket
+Verbindungen verwaltet.\\
+Die nutzerseitige Logik der App findet vor allem in Form von JavaScript
 clientseitig statt. Wenn Daten vom Server abgefragt werden müssen (so zum
-beispiel die liste der Kontakte), wird dies über eine REST API gemacht. Die
-Kommunikation von Server zu Client findet über WebSockets statt. Alternativ wird
-hier auch eine Implementation über Web Push verwendet, jedoch wurde diese
+beispiel die Liste der Kontakte), wird dies über eine REST API bewerkstelligt.
+Die Kommunikation von Server zu Client findet über WebSockets statt. Alternativ
+wird hier auch eine Implementation über Web Push verwendet, jedoch wurde diese
 aufgrund von Kompatibilitätsproblemen mit Edge und Firefox kurzfristig
-deaktiviert.
+deaktiviert. Die Dateiübertragung zwischen zwei Clients findet über WebRTC
+statt. So kann die Datei (bis auf die Ausnahme einer Firewall) direkt zwischen
+zwei Clients übertragen werden. Zwischen dem Front- und Backend steht noch ein
+Service Worker, der im Browser der Nutzers läuft. Dieser ist für das Empfangen
+von Nachrichten des Servers, und das cachen von Dateien zuständig.
+
+
+\subsection{Authentifizierung}
+
+Beim ersten Besuch der Webseite wird der Nutzer aufgefordert, bei der
+Einrichtung einen Name für das Gerät und den verbundenen Nutzer einzugeben.
+Diese Informationen werden dann an den Server gesendet, welcher dem Gerät eine
+einzigartige Device ID zuweist. Diese ID wird dann in einem Cookie gespeichert,
+und bei weiteren Besuchen der Webseite an den Server gesendet. Der Server kann
+dann durch diese ID das Gerät identifizieren, und die Daten des Geräts aus der
+Datenbank laden.\\
+Um zu verhindern, dass ein Nutzer sich als ein anderes Gerät ausgibt, wird
+zusätzlich zur Device ID ein Token generiert, welches auch einem Cookie
+gespeichert wird. Dieses Token wird bei jeder Anfrage an den Server gesendet,
+und der Server kann dann überprüfen, ob das Token, das mit der Signatur des
+Servers unterzeichnet wurde, zu der Device ID passt.
 
 \subsection{Geräte, Nutzer, Kontakte}
 
-Um eine einfache Organisation und Nutzung der App zu ermöglichen, werden
-Geräte, Nutzer und Kontakte unterschieden. Ein Gerät ist ein Gerät, auf dem die
-App installiert ist. Ein Nutzer ist eine Person, die die App nutzt. Ein Nutzer
-kann mehrere Geräte haben, und ein Gerät kann nur einen. Ein Kontakt
-repräsentiert eine Verbindung zwischen zwei Nutzern. Ein Nutzer kann mehrere
-Kontakte haben.
+Um eine einfache Organisation und Nutzung der App zu ermöglichen, werden Geräte,
+Nutzer und Kontakte unterschieden. Ein Gerät ist ein Gerät, auf dem die App
+installiert ist. Ein Nutzer ist eine Person, die die App nutzt. Ein Nutzer kann
+mehrere Geräte haben, und ein Gerät kann nur einen. Ein Kontakt repräsentiert
+eine Verbindung zwischen zwei Nutzern. Ein Nutzer kann mehrere Kontakte haben.\\
+Diese Verknüpfungen von Nutzern und Geräten (one-to-many) und Nutzern
+untereinander als Kontakte (many-to-many) können durch ein Generieren und
+Einlösen von sechsstelligen Verbindungs-Codes realisiert werden. Wenn ein Nutzer
+einen Code generiert, wird dieser Code in der Datenbank gespeichert, und der
+Nutzer kann diesen Code an einen anderen Nutzer weitergeben. Wenn der andere
+Nutzer diesen Code eingibt, wird eine Verbindung zwischen den beiden Nutzern
+hergestellt, und der Code wird aus der Datenbank gelöscht.
 
 
 \subsection{Filesharing}
 Wenn ein Nutzer eine Datei teilen möchte, wählt er einen verfügbaren Kontakt
-aus, dessen ID dann in einer Anfrage an den Server gesendet wird. Dieser schickt dann die Anfrage
-per WebSocket (oder Web Push) an die einzelnen Geräte des Kontakts. Wenn ein Gerät die Anfrage
-akzeptiert, schickt dieses Gerät eine Antwort an den Server, mit der PeerJs Adresse, an die die Datei übertragen
+aus, dessen ID dann in einer Anfrage an den Server gesendet wird. Dieser schickt
+dann die Anfrage per WebSocket (oder Web Push) an die einzelnen Geräte des
+Kontakts. Wenn ein Gerät die Anfrage akzeptiert, schickt dieses Gerät eine
+Antwort an den Server, mit der PeerJs Adresse, an die die Datei übertragen
 werden soll. Diese Antwort enthält auch den Public Key des Geräts, der für die
 Verschlüsselung der Datei verwendet wird. Der Server leitet diese Antwort dann
 an den ursprünglichen Nutzer weiter, der dann die Datei an die PeerJs Adresse
@@ -126,7 +153,18 @@ senden kann.
 
 \subsection{User-Story}
 
-...
+\subsubsection{Einrichtung}
+Wenn ein Nutzer die App zum ersten Mal öffnet, wird er aufgefordert, einen Namen
+für das Gerät anzugeben, und den Typ des Geräts auszuwählen. Dies dient lediglich
+der erleichterten späteren Identifikation der Geräte durch den Nutzer selbst.\\
+Zusätzlich zu den Daten des Geräts muss der Nutzer entweder einen neuen Nutzer erstellen,
+oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der Nutzer einen neuen erstellt,
+Kann er diesem einen Namen geben. Dieser Name wird auch für Kontakte sichtbar sein, wenn mit ihnen
+eine Datei geteilt wird. Dementsprechend wird der Name mithilfe der kostenlosen API \url{
+  https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
+Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier ungewollte
+Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der dann durch die \href{
+https://www.dicebear.com/}{Dicebear} API in einen Avatar umgewandelt wird.
 
 
 
