@@ -26,7 +26,7 @@ können. Die App basiert auf modernen Web-Technologien, wie z.B.
 \href{https://web.dev/progressive-web-apps/}{Progressive Web Apps}. Durch die
 Design-Philosophie des
 \href{https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement}{Progressive
-  Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
+Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
 App ist es, dass sie dauerhafte Verbindungen durch Kontakte möglich macht.
 Kontakte können zwischen mehreren Nutzern geknüpft werden, wobei jeder Nutzer
 mehrere Geräte haben kann. Zum Schutz der Privatsphäre und Benutzersicherheit
@@ -82,7 +82,7 @@ Entwickler-freundlich in Komponenten zu zerteilen. Zusätzlich bietet es eine
 einfache Möglichkeit, Backend und Frontend Seite an Seite zu entwickeln.
 Zusätzlich zu dem Backend-Code der in SvelteKit geschrieben ist, gibt es noch
 einen Microservice, der als \href{https://workers.cloudflare.com/}{Cloudflare
-  Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
+Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
 die Kommunikation von Server zu Client verwendet werden. Die Datenbank ist eine
 SQLite Datenbank, die mit dem Backend verbunden ist und Daten wie Geräte, Nutzer
 und Kontakte speichert.\\
@@ -155,31 +155,37 @@ senden kann.
 
 \subsubsection{Einrichtung}
 Wenn ein Nutzer die App zum ersten Mal öffnet, wird er aufgefordert, einen Namen
-für das Gerät anzugeben, und den Typ des Geräts auszuwählen. Dies dient lediglich
-der erleichterten späteren Identifikation der Geräte durch den Nutzer selbst.\\
-Zusätzlich zu den Daten des Geräts muss der Nutzer entweder einen neuen Nutzer erstellen,
-oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der Nutzer einen neuen erstellt,
-Kann er diesem einen Namen geben. Dieser Name wird auch für Kontakte sichtbar sein, wenn mit ihnen
-eine Datei geteilt wird. Dementsprechend wird der Name mithilfe der kostenlosen API \url{
-  https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
-Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier ungewollte
-Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der dann durch die \href{
-  https://www.dicebear.com/}{Dicebear} API in einen Avatar umgewandelt wird.
-Wenn der Nutzer das Gerät zu einem bereits existierenden Nutzer hinzufügt, muss er den
-Verbindungscode des Nutzers eingeben. Dieser Code wird dann an den Server gesendet, der
-dann überprüft, ob der Code existiert. Wenn der Code existiert, wird das Gerät dem Nutzer
-hinzugefügt, und der Code wird aus der Datenbank gelöscht. Wenn der Code nicht existiert,
+für das Gerät anzugeben, und den Typ des Geräts auszuwählen. Dies dient
+lediglich der erleichterten späteren Identifikation der Geräte durch den Nutzer
+selbst.\\
+Zusätzlich zu den Daten des Geräts muss der Nutzer entweder einen neuen Nutzer
+erstellen, oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der
+Nutzer einen neuen erstellt, Kann er diesem einen Namen geben. Dieser Name wird
+auch für Kontakte sichtbar sein, wenn mit ihnen eine Datei geteilt wird.
+Dementsprechend wird der Name mithilfe der kostenlosen API \url{
+https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
+Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier
+ungewollte Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der
+dann durch die \href{ https://www.dicebear.com/}{Dicebear} API in einen Avatar
+umgewandelt wird. Wenn der Nutzer das Gerät zu einem bereits existierenden
+Nutzer hinzufügt, muss er den Verbindungscode eingeben, den der Nutzer generiert
+hat. Dieser Code wird dann an den Server gesendet, der dann überprüft, ob der
+Code existiert. Wenn der Code existiert, wird das Gerät dem Nutzer hinzugefügt,
+und der Code wird aus der Datenbank gelöscht. Wenn der Code nicht existiert,
 wird eine Fehlermeldung angezeigt.\\
-Nach der erfolgreichen Einrichtung wird sich die Statusanzeige (in der oberen rechten Ecke) schnell auf grün ändern.
-Das bedeutet, dass das Gerät mit dem Server verbunden ist, und die App vollständig einsatzbereit ist.
+Nach der erfolgreichen Einrichtung wird sich die Statusanzeige (in der oberen
+rechten Ecke) schnell auf grün ändern. Das bedeutet, dass das Gerät mit dem
+Server verbunden ist, und die App vollständig einsatzbereit ist.
 
 \subsubsection{Kontakte verwalten}
 
 hinzufügen und entfernen von Kontakten
 
 \subsubsection{Dateien teilen}
+select, send, online contacts, error handling
 
 \subsubsection{Einstellungen}
+hinzufügen von geräten, linking code, infos ändern
 
 \subsubsection{App-Updates}
 alles vcs, automatisiertes deployment, service worker update notification
@@ -189,8 +195,75 @@ alles vcs, automatisiertes deployment, service worker update notification
 
 \section{Aufteilung der Aufgaben}
 
-\subsection*{Mitglieder}
+\subsection{Mitglieder}
 Dezhong Zhuang, Quentin Frey, Leonhard Masche
+
+\subsubsection{Leonhard Masche (\href{https://github.com/leonhma}{@leonhma})}
+\begin{itemize}
+  \item Infrastruktur und DevOps: Ich habe die Struktur des Projektes
+        eingerichtet, und die Infrastruktur auf Cloudflare konfiguriert. Dazu
+        gehört die Konfiguration des Domainnamen und DNS, sowie das Einrichten
+        der Datenbank, deren Integration mit dem Backend, sowie die CI/CD
+        Integration mit GitHub. Implementierungen sind: '/src/lib/db.ts',
+        '/src/lib/server/db.ts', '/wrangler.toml', '/migrations/*'
+  \item API: Ich habe die REST API entwickelt, die z.B. das Auflisten von
+        Kontakten und Geräten, Anfragen von Datei-Sharing und das Verbinden von
+        Nutzern untereinander und mit Geräten ermöglicht. Im Projekt sind all
+        diese Dateien unter '/src/routes/api' zu finden.
+  \item Authentifizierung: Ich habe die Authentifizierung implementiert, die
+        dafür sorgt, dass nur authentifizierte Geräte mit dem Server
+        kommunizieren können. Dazu gehört die Generierung von Tokens und
+        Device-IDs, sowie die Überprüfung dieser. Die Implementation ist unter
+        '/src/lib/server/crypto.ts' zu finden.
+  \item Server Side Notifications: Schon beim Thema Backend angekommen, habe ich
+        auch das System für die Benachrichtigungen konzeptioniert und
+        implementiert. Dieses System besteht aus einer Funktion auf dem Server,
+        die eine Nachricht adaptiv über einen der beiden Kanäle (WebSockets oder
+        Web Push) an den Client überliefert, sowie der clientseitige Logik, um
+        die Verbindung für die Nachrichten zu initialisieren und aktiv zu
+        halten. Die Implementation befindet sich unter
+        '/src/lib/server/notifications.ts'.
+  \item Web Push: Als einer der beiden Kanäle für die Benachrichtigungen habe
+        ich Web Push implementiert. Dazu gehört auch die Authentifizierung mit
+        dem VAPID-Keypair des Servers. (siehe '/scripts/genenrate-keys.js').
+        Dieser Kanal ist vor allem für die Benachrichtigungen auf mobilen
+        Geräten interessant, da er stromsparend Benachrichtigungen liefert, auch
+        wenn das Gerät sich nicht auf der Webseite befindet. Die Implementation
+        findet sich zum Teil in '/src/lib/server/notifications.ts' und zum Teil
+        im Service Worker. Aufgrund von unergründbaren Problemen bei der
+        Kompatibilität mit anderen Browsern (nicht Google Chrome), musste dieses
+        Feature (zumindest für die Vorführung) aber deaktiviert werden.
+  \item Service Worker: Zwischen Client und Server habe ich auch den Service
+        Worker geschrieben, der das Caching der Webseite für eine schnellere
+        Ladezeit mithilfe WorkBox verwaltet, und eine wichtige Rolle bei den
+        Push Notifications spielt geschrieben. Der Service Worker befindet sich
+        unter '/src/sw.ts'.
+  \item WebSockets: Als zweiter Kanal für die Benachrichtigungen habe ich die
+        finale Version der WebSockets implementiert. Zu dieser
+        Benachrichtigungsmethode gehört auch der in 'leonhma/fileplay-worker'
+        aufzufindende Cloudflare Worker, der ein Durable Object verwaltet,
+        welches die WebSocket Verbindung dem Server gegenüber zugänglich macht.
+  \item Als ein weiterer Teil den Notifications, habe ich mich mit der
+        Übertragung von Nachrichten zwischen Service Worker und Client
+        auseinandergesetzt. Dazu gehört auch, die per Web Push empfangenen
+        Nachrichten an den Client (die Webseite) weiterzuleiten, um auf sie
+        reagieren zu können. Die relevanten Stücke Code befinden sich in
+        '/src/sw.ts' und /src/lib/messages.ts'.
+  \item Notifications: Als letzter Teil der Notifications habe ich mich um die
+        Anzeige von interagierbaren Benachrichtigungen gekümmert. Das sind zum
+        einen die Benachrichtigungen die über den Service Worker und Web Push im
+        OS-Tray angezeigt werden, aber auch die Nachrichten, die in der App im
+        Notification Drawer sichtbar sind. Bei den In-App Benachrichtigungen
+        habe ich mich um die klickbaren Aktionen und deren Ausführung bemüht,
+        welche stark die Notification API im Service Worker nachahmen. Die
+        relevanten Dateien sind '/src/lib/stores/Dialog.ts' und
+        '/src/lib/components/NotificationsDrawer.svelte'.
+  \item Ein Teil des UIs den Ich gestaltet habe, ist der Einrichtungs-Dialog.
+        Dieser ist eng Verbunden mit der Authentifizierung und Der REST API. Die
+        relevante Datei ist '/src/lib/dialogs/SetupDialog.svelte'.
+\end{itemize}
+
+
 
 \section{To-Do}
 mirror to readme\\
