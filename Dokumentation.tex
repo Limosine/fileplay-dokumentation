@@ -26,7 +26,7 @@ können. Die App basiert auf modernen Web-Technologien, wie z.B.
 \href{https://web.dev/progressive-web-apps/}{Progressive Web Apps}. Durch die
 Design-Philosophie des
 \href{https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement}{Progressive
-Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
+  Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
 App ist es, dass sie dauerhafte Verbindungen durch Kontakte möglich macht.
 Kontakte können zwischen mehreren Nutzern geknüpft werden, wobei jeder Nutzer
 mehrere Geräte haben kann. Zum Schutz der Privatsphäre und Benutzersicherheit
@@ -45,7 +45,7 @@ denselben Personen teilt, wie es z.B. in der Schule der Fall ist.
 \section{Dokumentation}
 
 \subsection{Implementierung}
-Die App ist in Form einer Webseite realisiert, und ist somit auf allen Geräten
+Die App wurde in Form einer Webseite realisiert und ist somit auf allen Geräten
 zugänglich, die einen Browser haben. Für die Entwicklung haben wir uns für das
 Framework \href{https://kit.svelte.dev/}{SvelteKit} im NodeJS Ökosystem
 entschieden. Dadurch muss die App nicht manuell in den Browser-kompatiblen
@@ -60,11 +60,11 @@ benutzerfreundlich, da der Nutzer nicht durch das Laden von verschiedenen Seiten
 unterbrochen wird. Durch die optionale Installation als Progressive Web App
 (PWA) kann die App auch auf dem Homescreen installiert werden, und verhält sich
 dann wie eine native App.\\
-Die Entwicklung der App findet in einem öffentlichen GitHub Repository statt.
+Die Entwicklung der App findet in einer öffentlichen GitHub Repository statt.
 Dieses Repository ist unter \url{https://github.com/leonhma/fileplay} zu finden,
 und wird automatisch durch Integration mit Cloudflare auf den Adressen
 \url{https://app.fileplay.me} (für den {main}-branch) und
-\url{https://dev.fileplay.pages.dev} (für den {dev}-branch) verfügbar gemacht.\\
+\url{https://dev.fileplay.pages.dev} (für den {dev}-branch) zur Verfügung gestellt.\\
 Der Programmcode für einen Microservice der die Kommunikation von Server zu
 Client verwaltet ist unter \\\url{https://github.com/leonhma/fileplay-worker} zu
 finden. Dieser Mikroservice nutzt APIs die nicht in SvelteKit verfügbar sind,
@@ -77,28 +77,28 @@ der er interagiert. Das Backend (Controller) ist der Server, der die Webseite
 ausliefert und die Anwendungslogik verwaltet, und die Datenbank ist das Modell,
 in dem die Daten gespeichert werden. Sowohl das Frontend, als auch große Teile
 des Backends werden vom Framework SvelteKit verwaltet. Dieses Framework erlaubt
-es, die Webseite mit einem angepassten Syntax zu schreiben und
+es, die Webseite mit einer angepassten Syntax zu schreiben und
 Entwickler-freundlich in Komponenten zu zerteilen. Zusätzlich bietet es eine
 einfache Möglichkeit, Backend und Frontend Seite an Seite zu entwickeln.
-Zusätzlich zu dem Backend-Code der in SvelteKit geschrieben ist, gibt es noch
+Zusätzlich zu dem Backend-Code, der in SvelteKit geschrieben ist, gibt es noch
 einen Microservice, der als \href{https://workers.cloudflare.com/}{Cloudflare
-Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
+  Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
 die Kommunikation von Server zu Client verwendet werden. Die Datenbank ist eine
-SQLite Datenbank, die mit dem Backend verbunden ist und Daten wie Geräte, Nutzer
-und Kontakte speichert.\\
+SQLite Datenbank, welche mit dem Backend verbunden ist und Daten wie Geräte, Nutzer
+oder Kontakte speichert.\\
 Die einzelnen Teile der App (Backend, Datenbank und Microservice) werden alle
-auf Cloudflare gehosted. Cloudflare bietet verschieden Web-Hosting services an,
+auf Cloudflare gehosted. Cloudflare bietet verschieden Web-Hosting-Services an,
 darunter auch Pages, welches über eine GitHub Integration einfach mit dem
-Build-output von SvelteKit verbunden werden kann. Zusätzlich wird eine SQLite
-Datenbank namens D1 benutzt, welche im Backend einfach durch Umgebungsvariablen
+Build-Output von SvelteKit verbunden werden kann. Zusätzlich wird eine SQLite
+Datenbank namens D1 verwendet, welche im Backend einfach durch Umgebungsvariablen
 eingebunden werden kann. Der Microservice ist ein Cloudflare Worker, welcher
-mithilfe der neuen WebSocket Hibernation API ressourcenschonend die WebSocket
-Verbindungen verwaltet.\\
-Die nutzerseitige Logik der App findet vor allem in Form von JavaScript
-clientseitig statt. Wenn Daten vom Server abgefragt werden müssen (so zum
-beispiel die Liste der Kontakte), wird dies über eine REST API bewerkstelligt.
-Die Kommunikation von Server zu Client findet über WebSockets statt. Alternativ
-wird hier auch eine Implementation über Web Push verwendet, jedoch wurde diese
+mithilfe der neuen WebSocket Hibernation API ressourcenschonend die Verbindungen
+von Server zu Client verwaltet.\\
+Die clientseitige Logik der App findet vor allem in Form von JavaScript
+clientseitig statt. Wenn Daten vom Server abgefragt werden müssen, wie zum
+Beispiel die Liste der Kontakte, wird dies über eine REST API gemacht. Dagegen findet
+die Kommunikation von Server zu Client über WebSockets statt. Alternativ wird
+hier auch eine Implementierung mit Web Push verwendet, jedoch wurde diese
 aufgrund von Kompatibilitätsproblemen mit Edge und Firefox kurzfristig
 deaktiviert. Die Dateiübertragung zwischen zwei Clients findet über WebRTC
 statt. So kann die Datei (bis auf die Ausnahme einer Firewall) direkt zwischen
@@ -124,32 +124,30 @@ Servers unterzeichnet wurde, zu der Device ID passt.
 
 \subsection{Geräte, Nutzer, Kontakte}
 
-Um eine einfache Organisation und Nutzung der App zu ermöglichen, werden Geräte,
-Nutzer und Kontakte unterschieden. Ein Gerät ist ein Gerät, auf dem die App
+Um eine einfache Organisation und Nutzung der App zu ermöglichen, wird zwischen Geräten,
+Nutzern und Kontakten unterschieden. Ein Gerät ist ein Endgerät, auf dem die App
 installiert ist. Ein Nutzer ist eine Person, die die App nutzt. Ein Nutzer kann
-mehrere Geräte haben, und ein Gerät kann nur einen. Ein Kontakt repräsentiert
-eine Verbindung zwischen zwei Nutzern. Ein Nutzer kann mehrere Kontakte haben.\\
+mehrere Geräte besitzen, ein Gerät dagegen kann nur einem Nutzer zugeordnet werden. Ein Kontakt repräsentiert
+eine Verbindung zwischen zwei Nutzern, welche wiederum unbegrenzt viele Kontakte haben können.\\
 Diese Verknüpfungen von Nutzern und Geräten (one-to-many) und Nutzern
-untereinander als Kontakte (many-to-many) können durch ein Generieren und
-Einlösen von sechsstelligen Verbindungs-Codes realisiert werden. Wenn ein Nutzer
-einen Code generiert, wird dieser Code in der Datenbank gespeichert, und der
-Nutzer kann diesen Code an einen anderen Nutzer weitergeben. Wenn der andere
+untereinander, als Kontakte (many-to-many), können durch das Generieren und
+Einlösen von sechsstelligen Verbindungscodes realisiert werden. Wenn ein Nutzer
+einen Code generiert, wird dieser Code in der Datenbank gespeichert und kann diesen
+Code an einen anderen Nutzer weitergeben. Wenn der andere
 Nutzer diesen Code eingibt, wird eine Verbindung zwischen den beiden Nutzern
-hergestellt, und der Code wird aus der Datenbank gelöscht.
+hergestellt und der Code wird aus der Datenbank gelöscht.
 
 
 \subsection{Filesharing}
 Wenn ein Nutzer eine Datei teilen möchte, wählt er einen verfügbaren Kontakt
 aus, dessen ID dann in einer Anfrage an den Server gesendet wird. Dieser schickt
-dann die Anfrage per WebSocket (oder Web Push) an die einzelnen Geräte des
+diese Anfrage anschließend per WebSocket (oder Web Push) an die einzelnen Geräte des
 Kontakts. Wenn ein Gerät die Anfrage akzeptiert, schickt dieses Gerät eine
-Antwort an den Server, mit der PeerJs Adresse, an die die Datei übertragen
-werden soll. Diese Antwort enthält auch den Public Key des Geräts, der für die
+Antwort mit der PeerJS-Adresse des Geräts, an das die Datei übertragen werden soll,
+an den Server. Diese Antwort enthält auch den Public Key des Geräts, der für die
 Verschlüsselung der Datei verwendet wird. Der Server leitet diese Antwort dann
-an den ursprünglichen Nutzer weiter, der dann die Datei an die PeerJs Adresse
+an den ursprünglichen Nutzer weiter, der die Datei dann an die PeerJS-Adresse
 senden kann.
-
-
 
 \subsection{User-Story}
 
@@ -163,7 +161,7 @@ erstellen, oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der
 Nutzer einen neuen erstellt, Kann er diesem einen Namen geben. Dieser Name wird
 auch für Kontakte sichtbar sein, wenn mit ihnen eine Datei geteilt wird.
 Dementsprechend wird der Name mithilfe der kostenlosen API \url{
-https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
+  https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
 Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier
 ungewollte Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der
 dann durch die \href{ https://www.dicebear.com/}{Dicebear} API in einen Avatar
@@ -189,8 +187,6 @@ hinzufügen von geräten, linking code, infos ändern
 
 \subsubsection{App-Updates}
 alles vcs, automatisiertes deployment, service worker update notification
-
-
 
 
 \section{Aufteilung der Aufgaben}
