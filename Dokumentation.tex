@@ -6,7 +6,8 @@
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
 
-% cSpell:words Filesharing techstack Dezhong Zhuang Svelte SMUI Benachrichtigungsdrawer Kontaktdrawer peerjs Fileplay
+% cSpell:words Filesharing techstack Dezhong Zhuang Svelte SMUI
+% Benachrichtigungsdrawer Kontaktdrawer peerjs Fileplay
 
 \begin{document}
 
@@ -26,7 +27,7 @@ können. Die App basiert auf modernen Web-Technologien, wie z.B.
 \href{https://web.dev/progressive-web-apps/}{Progressive Web Apps}. Durch die
 Design-Philosophie des
 \href{https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement}{Progressive
-  Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
+      Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
 App ist es, dass sie dauerhafte Verbindungen durch Kontakte möglich macht.
 Kontakte können zwischen mehreren Nutzern geknüpft werden, wobei jeder Nutzer
 mehrere Geräte haben kann. Zum Schutz der Privatsphäre und Benutzersicherheit
@@ -64,7 +65,8 @@ Die Entwicklung der App findet in einer öffentlichen GitHub Repository statt.
 Dieses Repository ist unter \url{https://github.com/leonhma/fileplay} zu finden,
 und wird automatisch durch Integration mit Cloudflare auf den Adressen
 \url{https://app.fileplay.me} (für den {main}-branch) und
-\url{https://dev.fileplay.pages.dev} (für den {dev}-branch) zur Verfügung gestellt.\\
+\url{https://dev.fileplay.pages.dev} (für den {dev}-branch) zur Verfügung
+gestellt.\\
 Der Programmcode für einen Microservice der die Kommunikation von Server zu
 Client verwaltet ist unter \\\url{https://github.com/leonhma/fileplay-worker} zu
 finden. Dieser Mikroservice nutzt APIs die nicht in SvelteKit verfügbar sind,
@@ -82,23 +84,23 @@ Entwickler-freundlich in Komponenten zu zerteilen. Zusätzlich bietet es eine
 einfache Möglichkeit, Backend und Frontend Seite an Seite zu entwickeln.
 Zusätzlich zu dem Backend-Code, der in SvelteKit geschrieben ist, gibt es noch
 einen Microservice, der als \href{https://workers.cloudflare.com/}{Cloudflare
-  Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
+      Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
 die Kommunikation von Server zu Client verwendet werden. Die Datenbank ist eine
-SQLite Datenbank, welche mit dem Backend verbunden ist und Daten wie Geräte, Nutzer
-oder Kontakte speichert.\\
+SQLite Datenbank, welche mit dem Backend verbunden ist und Daten wie Geräte,
+Nutzer oder Kontakte speichert.\\
 Die einzelnen Teile der App (Backend, Datenbank und Microservice) werden alle
 auf Cloudflare gehosted. Cloudflare bietet verschieden Web-Hosting-Services an,
 darunter auch Pages, welches über eine GitHub Integration einfach mit dem
 Build-Output von SvelteKit verbunden werden kann. Zusätzlich wird eine SQLite
-Datenbank namens D1 verwendet, welche im Backend einfach durch Umgebungsvariablen
-eingebunden werden kann. Der Microservice ist ein Cloudflare Worker, welcher
-mithilfe der neuen WebSocket Hibernation API ressourcenschonend die Verbindungen
-von Server zu Client verwaltet.\\
+Datenbank namens D1 verwendet, welche im Backend einfach durch
+Umgebungsvariablen eingebunden werden kann. Der Microservice ist ein Cloudflare
+Worker, welcher mithilfe der neuen WebSocket Hibernation API ressourcenschonend
+die Verbindungen von Server zu Client verwaltet.\\
 Die clientseitige Logik der App findet vor allem in Form von JavaScript
 clientseitig statt. Wenn Daten vom Server abgefragt werden müssen, wie zum
-Beispiel die Liste der Kontakte, wird dies über eine REST API gemacht. Dagegen findet
-die Kommunikation von Server zu Client über WebSockets statt. Alternativ wird
-hier auch eine Implementierung mit Web Push verwendet, jedoch wurde diese
+Beispiel die Liste der Kontakte, wird dies über eine REST API gemacht. Dagegen
+findet die Kommunikation von Server zu Client über WebSockets statt. Alternativ
+wird hier auch eine Implementierung mit Web Push verwendet, jedoch wurde diese
 aufgrund von Kompatibilitätsproblemen mit Edge und Firefox kurzfristig
 deaktiviert. Die Dateiübertragung zwischen zwei Clients findet über WebRTC
 statt. So kann die Datei (bis auf die Ausnahme einer Firewall) direkt zwischen
@@ -124,30 +126,31 @@ Servers unterzeichnet wurde, zu der Device ID passt.
 
 \subsection{Geräte, Nutzer, Kontakte}
 
-Um eine einfache Organisation und Nutzung der App zu ermöglichen, wird zwischen Geräten,
-Nutzern und Kontakten unterschieden. Ein Gerät ist ein Endgerät, auf dem die App
-installiert ist. Ein Nutzer ist eine Person, die die App nutzt. Ein Nutzer kann
-mehrere Geräte besitzen, ein Gerät dagegen kann nur einem Nutzer zugeordnet werden. Ein Kontakt repräsentiert
-eine Verbindung zwischen zwei Nutzern, welche wiederum unbegrenzt viele Kontakte haben können.\\
+Um eine einfache Organisation und Nutzung der App zu ermöglichen, wird zwischen
+Geräten, Nutzern und Kontakten unterschieden. Ein Gerät ist ein Endgerät, auf
+dem die App installiert ist. Ein Nutzer ist eine Person, die die App nutzt. Ein
+Nutzer kann mehrere Geräte besitzen, ein Gerät dagegen kann nur einem Nutzer
+zugeordnet werden. Ein Kontakt repräsentiert eine Verbindung zwischen zwei
+Nutzern, welche wiederum unbegrenzt viele Kontakte haben können.\\
 Diese Verknüpfungen von Nutzern und Geräten (one-to-many) und Nutzern
 untereinander, als Kontakte (many-to-many), können durch das Generieren und
 Einlösen von sechsstelligen Verbindungscodes realisiert werden. Wenn ein Nutzer
-einen Code generiert, wird dieser Code in der Datenbank gespeichert und kann diesen
-Code an einen anderen Nutzer weitergeben. Wenn der andere
-Nutzer diesen Code eingibt, wird eine Verbindung zwischen den beiden Nutzern
-hergestellt und der Code wird aus der Datenbank gelöscht.
+einen Code generiert, wird dieser Code in der Datenbank gespeichert und kann
+diesen Code an einen anderen Nutzer weitergeben. Wenn der andere Nutzer diesen
+Code eingibt, wird eine Verbindung zwischen den beiden Nutzern hergestellt und
+der Code wird aus der Datenbank gelöscht.
 
 
 \subsection{Filesharing}
 Wenn ein Nutzer eine Datei teilen möchte, wählt er einen verfügbaren Kontakt
 aus, dessen ID dann in einer Anfrage an den Server gesendet wird. Dieser schickt
-diese Anfrage anschließend per WebSocket (oder Web Push) an die einzelnen Geräte des
-Kontakts. Wenn ein Gerät die Anfrage akzeptiert, schickt dieses Gerät eine
-Antwort mit der PeerJS-Adresse des Geräts, an das die Datei übertragen werden soll,
-an den Server. Diese Antwort enthält auch den Public Key des Geräts, der für die
-Verschlüsselung der Datei verwendet wird. Der Server leitet diese Antwort dann
-an den ursprünglichen Nutzer weiter, der die Datei dann an die PeerJS-Adresse
-senden kann.
+diese Anfrage anschließend per WebSocket (oder Web Push) an die einzelnen Geräte
+des Kontakts. Wenn ein Gerät die Anfrage akzeptiert, schickt dieses Gerät eine
+Antwort mit der PeerJS-Adresse des Geräts, an das die Datei übertragen werden
+soll, an den Server. Diese Antwort enthält auch den Public Key des Geräts, der
+für die Verschlüsselung der Datei verwendet wird. Der Server leitet diese
+Antwort dann an den ursprünglichen Nutzer weiter, der die Datei dann an die
+PeerJS-Adresse senden kann.
 
 \subsection{User-Story}
 
@@ -161,7 +164,7 @@ erstellen, oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der
 Nutzer einen neuen erstellt, Kann er diesem einen Namen geben. Dieser Name wird
 auch für Kontakte sichtbar sein, wenn mit ihnen eine Datei geteilt wird.
 Dementsprechend wird der Name mithilfe der kostenlosen API \url{
-  https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
+      https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
 Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier
 ungewollte Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der
 dann durch die \href{ https://www.dicebear.com/}{Dicebear} API in einen Avatar
@@ -177,10 +180,43 @@ Server verbunden ist, und die App vollständig einsatzbereit ist.
 
 \subsubsection{Kontakte verwalten}
 
-hinzufügen und entfernen von Kontakten
+Zum hinzufügen und entfernen von Kontakte muss sich der Nutzer zuerst die
+Einrichtung durchlaufen. Dann kann er in der Top-Bar (der orangen Leiste oben im
+Fenster) auf das Icon mit dem Kontaktbuch klicken. Daraufhin öffnet sich ein
+Drawer (eine Leiste, die von der Seite aus aufgezogen wird), in dem alle
+Kontakte aufgelistet sind. Wenn der Nutzer einen Kontakt hinzufügen möchte, kann
+er auf 'add contact' klicken. Daraufhin öffnet sich ein Dialog, in dem der
+Nutzer entweder einen bestehenden Verbindungscode eingeben, oder einen neuen
+generieren kann. Wenn der Nutzer einen neuen Code generiert, wird dieser Code in
+der Datenbank gespeichert, und der Nutzer kann diesen Code an einen anderen
+Nutzer weitergeben.\\
+Möchte der Nutzer einen Kontakt entfernen, kann er in der Liste der Kontakte auf
+das Trash-Icon neben dem Kontakt klicken. Daraufhin wird eine Anfrage an den
+Server gesendet, der dann den Kontakt aus der Datenbank löscht. Diese Anfrage
+bedarf natürlich - so wie die meisten - Authentifizierung damit nicht jeder
+Nutzer die Kontakte anderer Nutzer löschen kann.
+
+
 
 \subsubsection{Dateien teilen}
-select, send, online contacts, error handling
+
+Um eine Datei zu teilen, muss der Nutzer zuerst die Einrichtung durchlaufen.
+Dann kann er mitten auf der Seite das Icon mit dem Upload-Symbol klicken.
+Daraufhin wird vom Browser ein Datei-Dialog geöffnet, in dem der Nutzer eine
+Datei auswählen kann. Wenn der Nutzer eine Datei ausgewählt hat, wird der Name
+der Datei neben dem Icon angezeigt. Nun kann der Nutzer durch einen Klick auf
+das 'Senden' Icon die Datei an einen Kontakt senden. Es öffnet sich ein Dialog,
+in dem der Nutzer einen Kontakt auswählen kann. Hier werden nur Kontakte
+angezeigt, die in der letzten Minute ein Lebenszeichen an den Server gesendet
+haben. Wenn der Nutzer einen Kontakt auswählt, wird eine Anfrage an den Server
+gesendet, der dann die Anfrage an die einzelnen Geräte des Kontakts weiterleitet wird
+und auf eine Antwort wartet. Während diesem Prozess steht der Status beim Sender auf 'requesting'.
+Wenn ein Gerät die Anfrage akzeptiert, wird ein weiterer Request an den Server gesendet, der
+auch die Details benötigt, um die Datei zu senden. Wenn der Server diese
+Details erhalten hat, wird eine Benachrichtigung mit den Details an das Gerät gesendet, welches
+die ursprüngliche Anfrage gestartet hat. Dieses Gerät kann dann die Datei an
+das Gerät des Kontakts senden. Während der Übertragung der Datei wird der
+Status beim Sender auf 'sending' gesetzt.
 
 \subsubsection{Einstellungen}
 hinzufügen von geräten, linking code, infos ändern
@@ -198,153 +234,180 @@ alles vcs, automatisiertes deployment, service worker update notification
 
 \subsection{Leonhard Masche (\href{https://github.com/leonhma}{@leonhma})}
 \begin{itemize}
-  \item Infrastruktur und DevOps: Ich habe die Struktur des Projektes
-        eingerichtet, und die Infrastruktur auf Cloudflare konfiguriert. Dazu
-        gehört die Konfiguration des Domainnamen und DNS, sowie das Einrichten
-        der Datenbank, deren Integration mit dem Backend, sowie die CI/CD
-        Integration mit GitHub. Implementierungen sind: '/src/lib/db.ts',
-        '/src/lib/server/db.ts', '/wrangler.toml', '/migrations/*'
-  \item API: Ich habe die REST API entwickelt, die z.B. das Auflisten von
-        Kontakten und Geräten, Anfragen von Datei-Sharing und das Verbinden von
-        Nutzern untereinander und mit Geräten ermöglicht. Im Projekt sind all
-        diese Dateien unter '/src/routes/api/**' zu finden.
-  \item Authentifizierung: Ich habe die Authentifizierung implementiert, die
-        dafür sorgt, dass nur authentifizierte Geräte mit dem Server
-        kommunizieren können. Dazu gehört die Generierung von Tokens und
-        Device-IDs, sowie die Überprüfung dieser. Die Implementation ist unter
-        '/src/lib/server/crypto.ts' zu finden.
-  \item Server Side Notifications: Schon beim Thema Backend angekommen, habe ich
-        auch das System für die Benachrichtigungen konzeptioniert und
-        implementiert. Dieses System besteht aus einer Funktion auf dem Server,
-        die eine Nachricht adaptiv über einen der beiden Kanäle (WebSockets oder
-        Web Push) an den Client überliefert, sowie der clientseitige Logik, um
-        die Verbindung für die Nachrichten zu initialisieren und aktiv zu
-        halten. Die Implementation befindet sich unter
-        '/src/lib/server/notifications.ts'.
-  \item Web Push: Als einer der beiden Kanäle für die Benachrichtigungen habe
-        ich Web Push implementiert. Dazu gehört auch die Authentifizierung mit
-        dem VAPID-Keypair des Servers. (siehe '/scripts/generate-keys.js').
-        Dieser Kanal ist vor allem für die Benachrichtigungen auf mobilen
-        Geräten interessant, da er stromsparend Benachrichtigungen liefert, auch
-        wenn das Gerät sich nicht auf der Webseite befindet. Die Implementation
-        findet sich zum Teil in '/src/lib/server/notifications.ts' und zum Teil
-        im Service Worker ('/src/sw.ts'). Aufgrund von unergründbaren Problemen bei der
-        Kompatibilität mit anderen Browsern (nicht Google Chrome), musste dieses
-        Feature (zumindest für die Vorführung) aber deaktiviert werden.
-  \item Service Worker: Zwischen Client und Server habe ich auch den Service
-        Worker geschrieben, der das Caching der Webseite für eine schnellere
-        Ladezeit mithilfe WorkBox verwaltet, und eine wichtige Rolle bei den
-        Push Notifications spielt, geschrieben. Der Service Worker befindet sich
-        unter '/src/sw.ts'.
-  \item WebSockets: Als zweiter Kanal für die Benachrichtigungen habe ich die
-        finale Version der WebSockets implementiert. Zu dieser
-        Benachrichtigungsmethode gehört auch der in 'leonhma/fileplay-worker'
-        aufzufindende Cloudflare Worker, der ein Durable Object verwaltet,
-        welches die WebSocket Verbindung dem Server gegenüber zugänglich macht.
-  \item Als ein weiterer Teil der Notifications, habe ich mich mit der
-        Übertragung von Nachrichten zwischen Service Worker und Client
-        auseinandergesetzt. Dazu gehört auch, die per Web Push empfangenen
-        Nachrichten an den Client (die Webseite) weiterzuleiten, um auf sie
-        reagieren zu können. Die relevanten Stücke Code befinden sich in
-        '/src/sw.ts' und /src/lib/messages.ts'.
-  \item Notifications: Als letzter Teil der Notifications habe ich mich um die
-        Anzeige von interagierbaren Benachrichtigungen gekümmert. Das sind zum
-        einen die Benachrichtigungen die über den Service Worker und Web Push im
-        OS-Tray angezeigt werden, aber auch die Nachrichten, die in der App im
-        Notification Drawer sichtbar sind. Bei den In-App Benachrichtigungen
-        habe ich mich um die klickbaren Aktionen und deren Ausführung bemüht,
-        welche stark die Notification API im Service Worker nachahmen. Die
-        relevanten Dateien sind '/src/sw.ts', '/src/lib/stores/Dialog.ts' und
-        '/src/lib/components/NotificationDrawer.svelte'.
-  \item Ein Teil des UIs den Ich gestaltet habe, ist der Einrichtungs-Dialog.
-        Dieser ist eng Verbunden mit der Authentifizierung und Der REST API. Die
-        relevante Datei ist '/src/lib/dialogs/SetupDialog.svelte'.
+      \item Infrastruktur und DevOps: Ich habe die Struktur des Projektes
+            eingerichtet, und die Infrastruktur auf Cloudflare konfiguriert.
+            Dazu gehört die Konfiguration des Domainnamen und DNS, sowie das
+            Einrichten der Datenbank, deren Integration mit dem Backend, sowie
+            die CI/CD Integration mit GitHub. Implementierungen sind:
+            '/src/lib/db.ts', '/src/lib/server/db.ts', '/wrangler.toml',
+            '/migrations/*'
+      \item API: Ich habe die REST API entwickelt, die z.B. das Auflisten von
+            Kontakten und Geräten, Anfragen von Datei-Sharing und das Verbinden
+            von Nutzern untereinander und mit Geräten ermöglicht. Im Projekt
+            sind all diese Dateien unter '/src/routes/api/**' zu finden.
+      \item Authentifizierung: Ich habe die Authentifizierung implementiert, die
+            dafür sorgt, dass nur authentifizierte Geräte mit dem Server
+            kommunizieren können. Dazu gehört die Generierung von Tokens und
+            Device-IDs, sowie die Überprüfung dieser. Die Implementation ist
+            unter '/src/lib/server/crypto.ts' zu finden.
+      \item Server Side Notifications: Schon beim Thema Backend angekommen, habe
+            ich auch das System für die Benachrichtigungen konzeptioniert und
+            implementiert. Dieses System besteht aus einer Funktion auf dem
+            Server, die eine Nachricht adaptiv über einen der beiden Kanäle
+            (WebSockets oder Web Push) an den Client überliefert, sowie der
+            clientseitige Logik, um die Verbindung für die Nachrichten zu
+            initialisieren und aktiv zu halten. Die Implementation befindet sich
+            unter '/src/lib/server/notifications.ts'.
+      \item Web Push: Als einer der beiden Kanäle für die Benachrichtigungen
+            habe ich Web Push implementiert. Dazu gehört auch die
+            Authentifizierung mit dem VAPID-Keypair des Servers. (siehe
+            '/scripts/generate-keys.js'). Dieser Kanal ist vor allem für die
+            Benachrichtigungen auf mobilen Geräten interessant, da er
+            stromsparend Benachrichtigungen liefert, auch wenn das Gerät sich
+            nicht auf der Webseite befindet. Die Implementation findet sich zum
+            Teil in '/src/lib/server/notifications.ts' und zum Teil im Service
+            Worker ('/src/sw.ts'). Aufgrund von unergründbaren Problemen bei der
+            Kompatibilität mit anderen Browsern (nicht Google Chrome), musste
+            dieses Feature (zumindest für die Vorführung) aber deaktiviert
+            werden.
+      \item Service Worker: Zwischen Client und Server habe ich auch den Service
+            Worker geschrieben, der das Caching der Webseite für eine schnellere
+            Ladezeit mithilfe WorkBox verwaltet, und eine wichtige Rolle bei den
+            Push Notifications spielt, geschrieben. Der Service Worker befindet
+            sich unter '/src/sw.ts'.
+      \item WebSockets: Als zweiter Kanal für die Benachrichtigungen habe ich
+            die finale Version der WebSockets implementiert. Zu dieser
+            Benachrichtigungsmethode gehört auch der in
+            'leonhma/fileplay-worker' aufzufindende Cloudflare Worker, der ein
+            Durable Object verwaltet, welches die WebSocket Verbindung dem
+            Server gegenüber zugänglich macht.
+      \item Als ein weiterer Teil der Notifications, habe ich mich mit der
+            Übertragung von Nachrichten zwischen Service Worker und Client
+            auseinandergesetzt. Dazu gehört auch, die per Web Push empfangenen
+            Nachrichten an den Client (die Webseite) weiterzuleiten, um auf sie
+            reagieren zu können. Die relevanten Stücke Code befinden sich in
+            '/src/sw.ts' und /src/lib/messages.ts'.
+      \item Notifications: Als letzter Teil der Notifications habe ich mich um
+            die Anzeige von interagierbaren Benachrichtigungen gekümmert. Das
+            sind zum einen die Benachrichtigungen die über den Service Worker
+            und Web Push im OS-Tray angezeigt werden, aber auch die Nachrichten,
+            die in der App im Notification Drawer sichtbar sind. Bei den In-App
+            Benachrichtigungen habe ich mich um die klickbaren Aktionen und
+            deren Ausführung bemüht, welche stark die Notification API im
+            Service Worker nachahmen. Die relevanten Dateien sind '/src/sw.ts',
+            '/src/lib/stores/Dialog.ts' und
+            '/src/lib/components/NotificationDrawer.svelte'.
+      \item Ein Teil des UIs den Ich gestaltet habe, ist der
+            Einrichtungs-Dialog. Dieser ist eng Verbunden mit der
+            Authentifizierung und Der REST API. Die relevante Datei ist
+            '/src/lib/dialogs/SetupDialog.svelte'.
 \end{itemize}
 
 \subsection{Quentin Frey (\href{https://github.com/limosine}{@limosine})}
 \begin{itemize}
-  \item UI (Material Design):\\
-        Viele Webseiten, Progressive Web Apps oder auch native Apps verwenden Material Design.
-        Um die Eingewöhnung so einfach wie möglich zu machen, hielt ich mich streng an
-        die Material Design Guidelines. Daher verwendete ich ausschließlich Komponenten aus
-        SMUI (SvelteMaterialUI), zudem blieb der Code dadurch übersichtlich. Die UI der App
-        besteht aus der Startseite, dem Benachrichtigungsdrawer, dem Kontaktdrawer und einer
-        Leiste, welche sich am oberen Fensterrand befindet. Außerdem können einige Dialoge,
-        wie der Einstellungsdialog, der Dialog für das Senden von Dateien oder der Dialog,
-        welcher es ermöglicht die Eigenschaften von Geräten zu verändern, geöffnet werden.
-        In der oberen App-Leiste befinden sich Knöpfe, mit welchen die Drawer geöffnet werden
-        können, der aktuelle Status angezeigt wird und der Einstellungsdialog geöffnet werden kann.
-  \item State Management:\\
-        Da die angezeigten Daten immer auf dem aktuellsten Stand sein müssen, wurde
-        ein zentraler Timer implementiert, welcher die Daten in einem bestimmten Intervall
-        abruft, wenn diese benötigt werden. Damit die Daten nicht verloren gehen und die
-        Seite dynamisch erneuert wird, werden Svelte Stores verwendet, in denen die oben
-        genannten Daten gespeichert werden.
-  \item Senden \& Aufteilen von Dateien (PeerJS):\\
-        Die Dateien werden in 1 Megabyte große Stücke
-        (Chunks) aufgeteilt und mithilfe von PeerJS, welches die Nutzung von WebRTC-Protokollen
-        vereinfacht, versendet. Dies ist im Ordner \textit{src/lib/peerjs} zu finden.
-  \item Verschlüsselung \& Entschlüsselung von Dateien (OpenPGP):\\
-        Da die OpenPGP-Verschlüsselung schon im Alltag verwendet wird, ist diese
-        vielfach überprüft worden und daher sehr sicher. Beispielsweise beim Versenden von E-Mails
-        wird oftmals die Verschlüsselung durch GPG / OpenPGP durchgeführt. Bei diesem Verfahren
-        wird ein öffentlicher und ein privater Schlüssel erstellt. Um eine Nachricht zu
-        verschlüsseln, wird der öffentliche Schüssel des Empfängers benötigt, sodass der
-        Empfänger die Datei mit seinem persönlichen privaten Schlüssel entschlüsseln kann.
-        Diese Nachrichten werden durch eine Armor verstärkt, indem diese ins ASCII-Encoding
-        konvertiert werden, anschließend werden diese an den Empfänger gesendet, welcher
-        die Stücke dann wieder zusammensetzt und entschlüsselt.
-  \item WebSockets (ohne Durable Objects):\\
-        Durable Objects sind Objekte,
-        welche im Cloudflare-Netzwerk in jedem Rechenzentrum existieren und gegenseitig miteinander
-        vernetzt sind. Durch diese Objekte ist es möglich, mehrere WebSocket-Verbindungen zu koppeln,
-        sodass Daten ohne Verzögerung übertragen werden können. Da Durable Objects Premium-Funktionen
-        von Cloudflare sind, implementierte ich eine WebSocket-Verbindung, welche nicht auf Durable Objects
-        oder ähnliches angewiesen ist. Diese wurde aber von dem Fileplay-Worker ersetzt, sodass
-        die Webseite, nachdem das Abonnement gekündigt wurde, nicht mehr funktioniert und
-        voraussichtlich durch die ältere Methode ersetzt werden muss. Diese ältere Methode verwendete
-        Einträge in der Datenbank, um die PeerJS-ID sowie den öffentlichen Schlüssel zu übertragen und funktioniert
-        daher auch, wenn die WebSockets keine gegenseitige Kenntnis voneinander haben.
-  \item Gast-Modus (ohne Erstellung eines Accounts):\\
-        Da viele Personen lediglich ein einziges Mal eine Datei empfangen möchten, ist es für diese umständlich
-        einen Account erstellen zu müssen. Daher fügte ich den Gast-Modus hinzu, welcher es ermöglicht
-        einen Link zu generieren, welchen jeder aufrufen kann, ohne einen Account zu erstellen. Auch bei diesem
-        Modus wird die Datei verschlüsselt, statt einem PublicKey wird hier jedoch einen Zeichenfolge verwendet, welche
-        im Link enthalten ist.
+      \item UI (Material Design):\\
+            Viele Webseiten, Progressive Web Apps oder auch native Apps
+            verwenden Material Design. Um die Eingewöhnung so einfach wie
+            möglich zu machen, hielt ich mich streng an die Material Design
+            Guidelines. Daher verwendete ich ausschließlich Komponenten aus SMUI
+            (SvelteMaterialUI), zudem blieb der Code dadurch übersichtlich. Die
+            UI der App besteht aus der Startseite, dem Benachrichtigungsdrawer,
+            dem Kontaktdrawer und einer Leiste, welche sich am oberen
+            Fensterrand befindet. Außerdem können einige Dialoge, wie der
+            Einstellungsdialog, der Dialog für das Senden von Dateien oder der
+            Dialog, welcher es ermöglicht die Eigenschaften von Geräten zu
+            verändern, geöffnet werden. In der oberen App-Leiste befinden sich
+            Knöpfe, mit welchen die Drawer geöffnet werden können, der aktuelle
+            Status angezeigt wird und der Einstellungsdialog geöffnet werden
+            kann.
+      \item State Management:\\
+            Da die angezeigten Daten immer auf dem aktuellsten Stand sein
+            müssen, wurde ein zentraler Timer implementiert, welcher die Daten
+            in einem bestimmten Intervall abruft, wenn diese benötigt werden.
+            Damit die Daten nicht verloren gehen und die Seite dynamisch
+            erneuert wird, werden Svelte Stores verwendet, in denen die oben
+            genannten Daten gespeichert werden.
+      \item Senden \& Aufteilen von Dateien (PeerJS):\\
+            Die Dateien werden in 1 Megabyte große Stücke (Chunks) aufgeteilt
+            und mithilfe von PeerJS, welches die Nutzung von WebRTC-Protokollen
+            vereinfacht, versendet. Dies ist im Ordner \textit{src/lib/peerjs}
+            zu finden.
+      \item Verschlüsselung \& Entschlüsselung von Dateien (OpenPGP):\\
+            Da die OpenPGP-Verschlüsselung schon im Alltag verwendet wird, ist
+            diese vielfach überprüft worden und daher sehr sicher.
+            Beispielsweise beim Versenden von E-Mails wird oftmals die
+            Verschlüsselung durch GPG / OpenPGP durchgeführt. Bei diesem
+            Verfahren wird ein öffentlicher und ein privater Schlüssel erstellt.
+            Um eine Nachricht zu verschlüsseln, wird der öffentliche Schüssel
+            des Empfängers benötigt, sodass der Empfänger die Datei mit seinem
+            persönlichen privaten Schlüssel entschlüsseln kann. Diese
+            Nachrichten werden durch eine Armor verstärkt, indem diese ins
+            ASCII-Encoding konvertiert werden, anschließend werden diese an den
+            Empfänger gesendet, welcher die Stücke dann wieder zusammensetzt und
+            entschlüsselt.
+      \item WebSockets (ohne Durable Objects):\\
+            Durable Objects sind Objekte, welche im Cloudflare-Netzwerk in jedem
+            Rechenzentrum existieren und gegenseitig miteinander vernetzt sind.
+            Durch diese Objekte ist es möglich, mehrere WebSocket-Verbindungen
+            zu koppeln, sodass Daten ohne Verzögerung übertragen werden können.
+            Da Durable Objects Premium-Funktionen von Cloudflare sind,
+            implementierte ich eine WebSocket-Verbindung, welche nicht auf
+            Durable Objects oder ähnliches angewiesen ist. Diese wurde aber von
+            dem Fileplay-Worker ersetzt, sodass die Webseite, nachdem das
+            Abonnement gekündigt wurde, nicht mehr funktioniert und
+            voraussichtlich durch die ältere Methode ersetzt werden muss. Diese
+            ältere Methode verwendete Einträge in der Datenbank, um die
+            PeerJS-ID sowie den öffentlichen Schlüssel zu übertragen und
+            funktioniert daher auch, wenn die WebSockets keine gegenseitige
+            Kenntnis voneinander haben.
+      \item Gast-Modus (ohne Erstellung eines Accounts):\\
+            Da viele Personen lediglich ein einziges Mal eine Datei empfangen
+            möchten, ist es für diese umständlich einen Account erstellen zu
+            müssen. Daher fügte ich den Gast-Modus hinzu, welcher es ermöglicht
+            einen Link zu generieren, welchen jeder aufrufen kann, ohne einen
+            Account zu erstellen. Auch bei diesem Modus wird die Datei
+            verschlüsselt, statt einem PublicKey wird hier jedoch einen
+            Zeichenfolge verwendet, welche im Link enthalten ist.
 \end{itemize}
 
 \subsection{Dezhong Zhuang (\href{https://github.com/didi1150}{@didi1150})}
 \begin{itemize}
-  \item BETA UI:\\
-        Für das Design einer Website/App muss zuerst immer ein Design entworfen werden, welches
-        als Vorlage für die zukünftige Entwicklung dient. Dazu wurde explizit pures HTML, CSS
-        und Javascript verwendet, um den Designprozess so schnell und effizient wie möglich
-        zu gestalten. Zudem führt das Fehlen von jeglichen Abhängigkeiten dazu, dass später Features
-        schneller implementiert werden können.
-  \item Filesharing Progress UI:\\
-        Der Zweck des Aufteilens der Dateien in Chunks war, dass somit der Empfänger Rückmeldung
-        bekommt, wie weit der Dateiempfang schon vorangeschritten ist. Hierbei werden die angekommenen
-        Chunks innerhalb eines Svelte Stores gespeichert (mit jeweils unterschiedlichen IDs zur Zuordnung)
-        dessen Daten dann mit der Seite geteilt werden.
-  \item State Management:\\
-        Für das Suchen oder auch Speichern von ausgewählten Elementen werden Svelte Stores
-        verwendet, um automatische interne Benachrichtigungen beim Ändern eines Wertes zu 
-        verschicken. Für den Fall, dass keine 
-  \item Senden \& Aufteilen von Dateien (PeerJS):\\
-        Der Sender und Empfänger jeweils verschicken jeweils Metadaten mithilfe Peerjs aneinander,
-        wodurch ein Transferprozess initialisiert wird. Während dieses Prozess wird die angefragte
-        Datei in 1 Megabyte große Stücke (Chunks) aufgeteilt und an den Empfänger gesendet, Während
-        dieser nach jedem Chunk eine Bestätigung sendet.
-  \item Recherche und Vorstrukturierung:\\
-        Für die Verwendung von neuen Resourcen muss oft vorrecherhiert werden, welche APIs oder SDKs
-        nutzbar sind oder den Anforderungen des Projekts entsprechen. Im Anschluss daran werden diese 
-        vorübergehend in ihrer gewünschten Funktion zum Testen implementiert, damit diese später optimiert
-        werden können.
-  \item Generierung eines QR-Codes:\\
-        Während des Testens mit mehr oder weniger freiwilligen Probanden wurde festgestellt, dass es sehr
-        umständlich ist, einen Link an andere Personen ohne Verwendung von externen Plattformen zu verschicken.
-        Aus diesem Grund wurde die Anzeige eines generierten QR-Codes implementiert, welcher einfach und leicht 
-        aufzurufen ist.
+      \item BETA UI:\\
+            Für das Design einer Website/App muss zuerst immer ein Design
+            entworfen werden, welches als Vorlage für die zukünftige Entwicklung
+            dient. Dazu wurde explizit pures HTML, CSS und Javascript verwendet,
+            um den Designprozess so schnell und effizient wie möglich zu
+            gestalten. Zudem führt das Fehlen von jeglichen Abhängigkeiten dazu,
+            dass später Features schneller implementiert werden können.
+      \item Filesharing Progress UI:\\
+            Der Zweck des Aufteilens der Dateien in Chunks war, dass somit der
+            Empfänger Rückmeldung bekommt, wie weit der Dateiempfang schon
+            vorangeschritten ist. Hierbei werden die angekommenen Chunks
+            innerhalb eines Svelte Stores gespeichert (mit jeweils
+            unterschiedlichen IDs zur Zuordnung) dessen Daten dann mit der Seite
+            geteilt werden.
+      \item State Management:\\
+            Für das Suchen oder auch Speichern von ausgewählten Elementen werden
+            Svelte Stores verwendet, um automatische interne Benachrichtigungen
+            beim Ändern eines Wertes zu verschicken. Für den Fall, dass keine
+      \item Senden \& Aufteilen von Dateien (PeerJS):\\
+            Der Sender und Empfänger jeweils verschicken jeweils Metadaten
+            mithilfe Peerjs aneinander, wodurch ein Transferprozess
+            initialisiert wird. Während dieses Prozess wird die angefragte Datei
+            in 1 Megabyte große Stücke (Chunks) aufgeteilt und an den Empfänger
+            gesendet, Während dieser nach jedem Chunk eine Bestätigung sendet.
+      \item Recherche und Vorstrukturierung:\\
+            Für die Verwendung von neuen Resourcen muss oft vorrecherhiert
+            werden, welche APIs oder SDKs nutzbar sind oder den Anforderungen
+            des Projekts entsprechen. Im Anschluss daran werden diese
+            vorübergehend in ihrer gewünschten Funktion zum Testen
+            implementiert, damit diese später optimiert werden können.
+      \item Generierung eines QR-Codes:\\
+            Während des Testens mit mehr oder weniger freiwilligen Probanden
+            wurde festgestellt, dass es sehr umständlich ist, einen Link an
+            andere Personen ohne Verwendung von externen Plattformen zu
+            verschicken. Aus diesem Grund wurde die Anzeige eines generierten
+            QR-Codes implementiert, welcher einfach und leicht aufzurufen ist.
 \end{itemize}
 
 \section{To-Do}
