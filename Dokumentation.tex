@@ -20,14 +20,14 @@
 
 \section{Einleitung}
 Unser Projekt ist eine Filesharing App (Webseite), mit der Dateien Peer-to-Peer,
-also von Nutzer zu Nutzer, ohne zwischengeschalteten Server*, übertragen werden
+also von Nutzer zu Nutzer, ohne zwischengeschalteten Server, übertragen werden
 können. Die App basiert auf modernen Web-Technologien, wie z.B.
 \href{https://web.dev/push-notifications-web-push-protocol/}{Web Push},
 \href{https://web.dev/learn/pwa/service-workers/}{Service Workers} und
 \href{https://web.dev/progressive-web-apps/}{Progressive Web Apps}. Durch die
 Design-Philosophie des
 \href{https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement}{Progressive
-Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
+      Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
 App ist es, dass sie dauerhafte Verbindungen durch Kontakte möglich macht.
 Kontakte können zwischen mehreren Nutzern geknüpft werden, wobei jeder Nutzer
 mehrere Geräte haben kann. Zum Schutz der Privatsphäre und Benutzersicherheit
@@ -58,9 +58,10 @@ nur einmal geladen, und alle weiteren Interaktionen finden über JavaScript
 statt. Dadurch wird die App sehr schnell, da nur die Daten, die benötigt werden,
 vom Server geladen werden müssen. Zusätzlich wird die App dadurch sehr
 benutzerfreundlich, da der Nutzer nicht durch das Laden von verschiedenen Seiten
-unterbrochen wird. Durch die optionale Installation als Progressive Web App
-(PWA) kann die App auch auf dem Homescreen installiert werden, und verhält sich
-dann wie eine native App.\\
+unterbrochen wird. Die Dateiübertragung selbst findet über die Bibliothek PeerJS
+statt, welche wiederum WbRTC benutzt. Durch die optionale Installation als
+Progressive Web App (PWA) kann die App auch auf dem Homescreen installiert
+werden, und verhält sich dann wie eine native App.\\
 Die Entwicklung der App findet in einer öffentlichen GitHub Repository statt.
 Dieses Repository ist unter \url{https://github.com/leonhma/fileplay} zu finden,
 und wird automatisch durch Integration mit Cloudflare auf den Adressen
@@ -69,8 +70,8 @@ und wird automatisch durch Integration mit Cloudflare auf den Adressen
 gestellt.\\
 Der Programmcode für einen Microservice der die Kommunikation von Server zu
 Client verwaltet ist unter \\\url{https://github.com/leonhma/fileplay-worker} zu
-finden. Dieser Mikroservice nutzt APIs die nicht in SvelteKit verfügbar sind,
-und wird deshalb separat gehosted.
+finden. Dieser Mikroservice nutzt Cloudflare APIs die nicht in SvelteKit
+verfügbar sind, und wird deshalb separat gehosted.
 
 \subsection{Architektur}
 Die App ist nach dem MVC-Modell in drei Teile aufgeteilt: Frontend, Backend und
@@ -84,7 +85,7 @@ Entwickler-freundlich in Komponenten zu zerteilen. Zusätzlich bietet es eine
 einfache Möglichkeit, Backend und Frontend Seite an Seite zu entwickeln.
 Zusätzlich zu dem Backend-Code, der in SvelteKit geschrieben ist, gibt es noch
 einen Microservice, der als \href{https://workers.cloudflare.com/}{Cloudflare
-Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
+      Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
 die Kommunikation von Server zu Client verwendet werden. Die Datenbank ist eine
 SQLite Datenbank, welche mit dem Backend verbunden ist und Daten wie Geräte,
 Nutzer oder Kontakte speichert.\\
@@ -164,7 +165,7 @@ erstellen, oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der
 Nutzer einen neuen erstellt, Kann er diesem einen Namen geben. Dieser Name wird
 auch für Kontakte sichtbar sein, wenn mit ihnen eine Datei geteilt wird.
 Dementsprechend wird der Name mithilfe der kostenlosen API \url{
-https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
+      https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
 Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier
 ungewollte Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der
 dann durch die \href{ https://www.dicebear.com/}{Dicebear} API in einen Avatar
@@ -190,6 +191,10 @@ Nutzer entweder einen bestehenden Verbindungscode eingeben, oder einen neuen
 generieren kann. Wenn der Nutzer einen neuen Code generiert, wird dieser Code in
 der Datenbank gespeichert, und der Nutzer kann diesen Code an einen anderen
 Nutzer weitergeben.\\
+Dieser Andere Nutzer kann dann in demselben Dialog auf seinem Gerät den Code eingeben,
+und verbindet sich somit als Kontakt der Person, die den Code generiert hat.
+Diese Verbindung ist beidseitiger Natur, d.h. beide Nutzer sind Kontakte des
+jeweils anderen.\\
 Möchte der Nutzer einen Kontakt entfernen, kann er in der Liste der Kontakte auf
 das Trash-Icon neben dem Kontakt klicken. Daraufhin wird eine Anfrage an den
 Server gesendet, der dann den Kontakt aus der Datenbank löscht. Diese Anfrage
@@ -210,14 +215,15 @@ in dem der Nutzer einen Kontakt auswählen kann. Hier werden nur Kontakte
 angezeigt, die in der letzten Minute ein Lebenszeichen an den Server gesendet
 haben. Wenn der Nutzer einen Kontakt auswählt, wird eine Anfrage an den Server
 gesendet, der dann die Anfrage an die einzelnen Geräte des Kontakts weiterleitet
-wird und auf eine Antwort wartet. Während diesem Prozess steht der Status beim
+und auf eine Antwort wartet. Während diesem Prozess steht der Status beim
 Sender auf 'requesting'. Wenn ein Gerät die Anfrage akzeptiert, wird ein
 weiterer Request an den Server gesendet, der auch die Details benötigt, um die
 Datei zu senden. Wenn der Server diese Details erhalten hat, wird eine
 Benachrichtigung mit den Details an das Gerät gesendet, welches die
 ursprüngliche Anfrage gestartet hat. Dieses Gerät kann dann die Datei an das
 Gerät des Kontakts senden. Während der Übertragung der Datei wird der Status
-beim Sender auf 'sending' gesetzt.
+beim Sender auf 'sending' gesetzt. Passiert ein Fehler, wird der Status auf
+'failed' gesetzt.
 
 \subsubsection{Nutzer und Geräte verwalten}
 
@@ -227,13 +233,13 @@ navigieren. Daraufhin öffnet sich ein Dialog, in dem der Nutzer seinen Namen un
 Avatar ändern kann. Wenn der Nutzer seinen Namen oder Avatar ändert, wird dieser
 auch für alle Kontakte geändert. Wenn der Nutzer die Namen oder Typen seiner
 Geräte ändern möchte, so kann er das im Tab 'Devices' tun. Hier werden alle
-Geräte des Nutzers aufgelistet, und durch einen Klick auf das Dreipunkt-Menü wir
-ein weiterer Dialog geöffnet, in dem die Details des Geräts angepasst werden,
-sowie die Verbindung des Gerätes zum Account gelöst werden kann.
+Geräte des Nutzers aufgelistet, und durch einen Klick auf das Dreipunkt-Menü wird
+ein weiterer Dialog geöffnet, in dem die Details des Geräts angepasst,
+sowie die Verbindung des Gerätes zum Account gelöst werden können.
 
 \subsubsection{App-Updates}
 
-Während der Entwicklung, aber auch während der Nutzung der App, ist es nützlich,
+Während der Entwicklung, aber auch während der Veröffentlichung der App, ist es nützlich,
 den Nutzer über Updates zu informieren. Das ist besonders wichtig, da ein
 Service Worker benutzt wird, der die Webseite offline verfügbar mach, und somit
 nicht immer die aktuellste Version der Webseite lädt. Um den Nutzer über Updates
@@ -243,8 +249,8 @@ den Nutzer informiert, dass ein Update verfügbar ist. Wenn der Nutzer auf diese
 Benachrichtigung klickt, wird die Seite neu geladen, und die neue Version wird
 installiert.\\
 Durch die Integration mit GitHub und Cloudflare wird die App automatisch bei
-jedem Commit auf GitHub neu gebaut und auf Cloudflare Pages veröffentlicht. DDie
-Entwicklung findet auf dem 'dev'-branch statt, und finale Versionen werden über
+jedem Commit auf GitHub neu gebaut und auf Cloudflare Pages veröffentlicht. Die
+Entwicklung findet auf dem 'dev'-branch statt, und finalen Versionen werden über
 einen Pull-Request auf den 'main'-branch übertragen. Wenn ein Pull-Request auf
 den 'main'-branch gemerged wird, wird die App automatisch auf der Haupt-Domain
 'app.fileplay.me' veröffentlicht.
@@ -288,10 +294,11 @@ den 'main'-branch gemerged wird, wird die App automatisch auf der Haupt-Domain
             Authentifizierung mit dem VAPID-Keypair des Servers. (siehe
             '/scripts/generate-keys.js'). Dieser Kanal ist vor allem für die
             Benachrichtigungen auf mobilen Geräten interessant, da er
-            stromsparend Benachrichtigungen liefert, auch wenn das Gerät sich
-            nicht auf der Webseite befindet. Die Implementation findet sich zum
-            Teil in '/src/lib/server/notifications.ts' und zum Teil im Service
-            Worker ('/src/sw.ts'). Aufgrund von unergründbaren Problemen bei der
+            stromsparend Benachrichtigungen über einen Zentralisierten
+            Push-Service liefert, auch wenn das Gerät sich nicht auf der
+            Webseite befindet. Die Implementation findet sich zum Teil in
+            '/src/lib/server/notifications.ts' und zum Teil im Service Worker
+            ('/src/sw.ts'). Aufgrund von unergründbaren Problemen bei der
             Kompatibilität mit anderen Browsern (nicht Google Chrome), musste
             dieses Feature (zumindest für die Vorführung) aber deaktiviert
             werden.
@@ -434,14 +441,5 @@ den 'main'-branch gemerged wird, wird die App automatisch auf der Haupt-Domain
             verschicken. Aus diesem Grund wurde die Anzeige eines generierten
             QR-Codes implementiert, welcher einfach und leicht aufzurufen ist.
 \end{itemize}
-
-\section{To-Do}
-mirror to readme\\
-Anleitung\\
-techstack\\
-Webtechnologien und Fallbacks (version graphics)\\
-mvc muster\\
-anschaulich! (Grafiken, Diagramme, ...)
-
 
 \end{document}
