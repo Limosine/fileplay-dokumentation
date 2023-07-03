@@ -27,7 +27,7 @@ können. Die App basiert auf modernen Web-Technologien, wie z.B.
 \href{https://web.dev/progressive-web-apps/}{Progressive Web Apps}. Durch die
 Design-Philosophie des
 \href{https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement}{Progressive
-      Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
+Enhancement} werden aber auch ältere Browser unterstützt. Eine Besonderheit der
 App ist es, dass sie dauerhafte Verbindungen durch Kontakte möglich macht.
 Kontakte können zwischen mehreren Nutzern geknüpft werden, wobei jeder Nutzer
 mehrere Geräte haben kann. Zum Schutz der Privatsphäre und Benutzersicherheit
@@ -85,7 +85,7 @@ Entwickler-freundlich in Komponenten zu zerteilen. Zusätzlich bietet es eine
 einfache Möglichkeit, Backend und Frontend Seite an Seite zu entwickeln.
 Zusätzlich zu dem Backend-Code, der in SvelteKit geschrieben ist, gibt es noch
 einen Microservice, der als \href{https://workers.cloudflare.com/}{Cloudflare
-      Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
+Worker} in Typescript geschrieben ist. Dieser Verwaltet die WebSockets, die für
 die Kommunikation von Server zu Client verwendet werden. Die Datenbank ist eine
 SQLite Datenbank, welche mit dem Backend verbunden ist und Daten wie Geräte,
 Nutzer oder Kontakte speichert.\\
@@ -165,7 +165,7 @@ erstellen, oder das Gerät zu einem Bereits existierenden hinzufügen. Wenn der
 Nutzer einen neuen erstellt, Kann er diesem einen Namen geben. Dieser Name wird
 auch für Kontakte sichtbar sein, wenn mit ihnen eine Datei geteilt wird.
 Dementsprechend wird der Name mithilfe der kostenlosen API \url{
-      https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
+https://www.purgomalum.com/} auf unangemessene Inhalte überprüft.\\
 Ein weiteres identifizierendes Merkmal des Nutzers ist ein Avatar. Um auch hier
 ungewollte Überraschungen zu vermeiden, wird lediglich ein Seed generiert, der
 dann durch die \href{ https://www.dicebear.com/}{Dicebear} API in einen Avatar
@@ -191,10 +191,10 @@ Nutzer entweder einen bestehenden Verbindungscode eingeben, oder einen neuen
 generieren kann. Wenn der Nutzer einen neuen Code generiert, wird dieser Code in
 der Datenbank gespeichert, und der Nutzer kann diesen Code an einen anderen
 Nutzer weitergeben.\\
-Dieser Andere Nutzer kann dann in demselben Dialog auf seinem Gerät den Code eingeben,
-und verbindet sich somit als Kontakt der Person, die den Code generiert hat.
-Diese Verbindung ist beidseitiger Natur, d.h. beide Nutzer sind Kontakte des
-jeweils anderen.\\
+Dieser Andere Nutzer kann dann in demselben Dialog auf seinem Gerät den Code
+eingeben, und verbindet sich somit als Kontakt der Person, die den Code
+generiert hat. Diese Verbindung ist beidseitiger Natur, d.h. beide Nutzer sind
+Kontakte des jeweils anderen.\\
 Möchte der Nutzer einen Kontakt entfernen, kann er in der Liste der Kontakte auf
 das Trash-Icon neben dem Kontakt klicken. Daraufhin wird eine Anfrage an den
 Server gesendet, der dann den Kontakt aus der Datenbank löscht. Diese Anfrage
@@ -215,15 +215,14 @@ in dem der Nutzer einen Kontakt auswählen kann. Hier werden nur Kontakte
 angezeigt, die in der letzten Minute ein Lebenszeichen an den Server gesendet
 haben. Wenn der Nutzer einen Kontakt auswählt, wird eine Anfrage an den Server
 gesendet, der dann die Anfrage an die einzelnen Geräte des Kontakts weiterleitet
-und auf eine Antwort wartet. Während diesem Prozess steht der Status beim
-Sender auf 'requesting'. Wenn ein Gerät die Anfrage akzeptiert, wird ein
-weiterer Request an den Server gesendet, der auch die Details benötigt, um die
-Datei zu senden. Wenn der Server diese Details erhalten hat, wird eine
-Benachrichtigung mit den Details an das Gerät gesendet, welches die
-ursprüngliche Anfrage gestartet hat. Dieses Gerät kann dann die Datei an das
-Gerät des Kontakts senden. Während der Übertragung der Datei wird der Status
-beim Sender auf 'sending' gesetzt. Passiert ein Fehler, wird der Status auf
-'failed' gesetzt.
+und auf eine Antwort wartet. Während diesem Prozess steht der Status beim Sender
+auf 'requesting'. Wenn ein Gerät die Anfrage akzeptiert, wird ein weiterer
+Request an den Server gesendet, der auch die Details benötigt, um die Datei zu
+senden. Wenn der Server diese Details erhalten hat, wird eine Benachrichtigung
+mit den Details an das Gerät gesendet, welches die ursprüngliche Anfrage
+gestartet hat. Dieses Gerät kann dann die Datei an das Gerät des Kontakts
+senden. Während der Übertragung der Datei wird der Status beim Sender auf
+'sending' gesetzt. Passiert ein Fehler, wird der Status auf 'failed' gesetzt.
 
 \subsubsection{Nutzer und Geräte verwalten}
 
@@ -233,21 +232,21 @@ navigieren. Daraufhin öffnet sich ein Dialog, in dem der Nutzer seinen Namen un
 Avatar ändern kann. Wenn der Nutzer seinen Namen oder Avatar ändert, wird dieser
 auch für alle Kontakte geändert. Wenn der Nutzer die Namen oder Typen seiner
 Geräte ändern möchte, so kann er das im Tab 'Devices' tun. Hier werden alle
-Geräte des Nutzers aufgelistet, und durch einen Klick auf das Dreipunkt-Menü wird
-ein weiterer Dialog geöffnet, in dem die Details des Geräts angepasst,
+Geräte des Nutzers aufgelistet, und durch einen Klick auf das Dreipunkt-Menü
+wird ein weiterer Dialog geöffnet, in dem die Details des Geräts angepasst,
 sowie die Verbindung des Gerätes zum Account gelöst werden können.
 
 \subsubsection{App-Updates}
 
-Während der Entwicklung, aber auch während der Veröffentlichung der App, ist es nützlich,
-den Nutzer über Updates zu informieren. Das ist besonders wichtig, da ein
-Service Worker benutzt wird, der die Webseite offline verfügbar mach, und somit
-nicht immer die aktuellste Version der Webseite lädt. Um den Nutzer über Updates
-zu informieren, wird periodisch (30 Minuten) überprüft, ob eine neue Version der
-App verfügbar ist. Ist das der Fall, wird eine Benachrichtigung angezeigt, die
-den Nutzer informiert, dass ein Update verfügbar ist. Wenn der Nutzer auf diese
-Benachrichtigung klickt, wird die Seite neu geladen, und die neue Version wird
-installiert.\\
+Während der Entwicklung, aber auch während der Veröffentlichung der App, ist es
+nützlich, den Nutzer über Updates zu informieren. Das ist besonders wichtig, da
+ein Service Worker benutzt wird, der die Webseite offline verfügbar mach, und
+somit nicht immer die aktuellste Version der Webseite lädt. Um den Nutzer über
+Updates zu informieren, wird periodisch (30 Minuten) überprüft, ob eine neue
+Version der App verfügbar ist. Ist das der Fall, wird eine Benachrichtigung
+angezeigt, die den Nutzer informiert, dass ein Update verfügbar ist. Wenn der
+Nutzer auf diese Benachrichtigung klickt, wird die Seite neu geladen, und die
+neue Version wird installiert.\\
 Durch die Integration mit GitHub und Cloudflare wird die App automatisch bei
 jedem Commit auf GitHub neu gebaut und auf Cloudflare Pages veröffentlicht. Die
 Entwicklung findet auf dem 'dev'-branch statt, und finalen Versionen werden über
@@ -333,6 +332,11 @@ den 'main'-branch gemerged wird, wird die App automatisch auf der Haupt-Domain
             Einrichtungs-Dialog. Dieser ist eng Verbunden mit der
             Authentifizierung und Der REST API. Die relevante Datei ist
             '/src/lib/dialogs/SetupDialog.svelte'.
+      \item Progressive Web App: Die App kann durch das hinzufügen eines
+            Webmanifest und des Service Workers als Progressive Web App
+            installiert werden und als native App verwendet werden. Ich habe
+            sowohl den Service Worker, als auch das Webmanifest geschrieben
+            ('/src/static/manifest.json').
 \end{itemize}
 
 \subsection{Quentin Frey (\href{https://github.com/limosine}{@limosine})}
@@ -423,11 +427,11 @@ den 'main'-branch gemerged wird, wird die App automatisch auf der Haupt-Domain
             Svelte Stores verwendet, um automatische interne Benachrichtigungen
             beim Ändern eines Wertes zu verschicken. Für den Fall, dass keine
       \item Senden \& Aufteilen von Dateien (PeerJS):\\
-            Der Sender und Empfänger verschicken jeweils Metadaten
-            mithilfe Peerjs aneinander, wodurch ein Transferprozess
-            initialisiert wird. Während dieses Prozess wird die angefragte Datei
-            in 1 Megabyte große Stücke (Chunks) aufgeteilt und an den Empfänger
-            gesendet, Während dieser nach jedem Chunk eine Bestätigung sendet.
+            Der Sender und Empfänger verschicken jeweils Metadaten mithilfe
+            Peerjs aneinander, wodurch ein Transferprozess initialisiert wird.
+            Während dieses Prozess wird die angefragte Datei in 1 Megabyte große
+            Stücke (Chunks) aufgeteilt und an den Empfänger gesendet, Während
+            dieser nach jedem Chunk eine Bestätigung sendet.
       \item Recherche und Vorstrukturierung:\\
             Für die Verwendung von neuen Ressourcen muss oft vorrecherchiert
             werden, welche APIs oder SDKs nutzbar sind oder den Anforderungen
