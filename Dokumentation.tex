@@ -313,6 +313,35 @@ alles vcs, automatisiertes deployment, service worker update notification
         im Link enthalten ist.
 \end{itemize}
 
+\subsection{Dezhong Zhuang (\href{https://github.com/didi1150}{@didi1150})}
+\begin{itemize}
+  \item BETA UI:\\
+        Für das Design einer Website/App muss zuerst immer ein Design entworfen werden, welches
+        als Vorlage für die zukünftige Entwicklung dient. Dazu wurde explizit pures HTML, CSS
+        und Javascript verwendet, um den Designprozess so schnell und effizient wie möglich
+        zu gestalten. Zudem führt das Fehlen von jeglichen Abhängigkeiten dazu, dass später Features
+        schneller implementiert werden können.
+  \item Filesharing Progress UI:\\
+        Der Zweck des Aufteilens der Dateien in Chunks war, dass somit der Empfänger Rückmeldung
+        bekommt, wie weit der Dateiempfang schon vorangeschritten ist. Hierbei werden die angekommenen
+        Chunks innerhalb eines Svelte Stores gespeichert (mit jeweils unterschiedlichen IDs zur Zuordnung)
+        dessen Daten dann mit der Seite geteilt werden.
+  \item State Management:\\
+        Für das Suchen oder auch Speichern von ausgewählten Elementen werden Svelte Stores
+        verwendet, um automatische interne Benachrichtigungen beim Ändern eines Wertes zu 
+        verschicken. Für den Fall, dass keine 
+  \item Senden \& Aufteilen von Dateien (PeerJS):\\
+        Der Sender und Empfänger jeweils verschicken jeweils Metadaten mithilfe Peerjs aneinander,
+        wodurch ein Transferprozess initialisiert wird. Während dieses Prozess wird die angefragte
+        Datei in 1 Megabyte große Stücke (Chunks) aufgeteilt und an den Empfänger gesendet, Während
+        dieser nach jedem Chunk eine Bestätigung sendet.
+  \item Recherche und Vorstrukturierung:\\
+        Für die Verwendung von neuen Resourcen muss oft vorrecherhiert werden, welche APIs oder SDKs
+        nutzbar sind oder den Anforderungen des Projekts entsprechen. Im Anschluss daran werden diese 
+        vorübergehend in ihrer gewünschten Funktion zum Testen implementiert, damit diese später optimiert
+        werden können.
+\end{itemize}
+
 \section{To-Do}
 mirror to readme\\
 Anleitung\\
